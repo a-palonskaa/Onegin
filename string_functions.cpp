@@ -3,7 +3,7 @@
 
 #include "string_functions.h"
 
-static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2)
+static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2);
 
 bool CompareStr(char* string1, char* string2) {
     assert(string1 != nullptr);
@@ -12,24 +12,16 @@ bool CompareStr(char* string1, char* string2) {
     int i = 0;
     int j = 0;
 
-    while(!isalpha(string1[i])) {
+    SkipNonAlphaSymbols(&i, &j, string1, string2);
+
+    while (i < MAX_STR_LEN && j < MAX_STR_LEN &&
+           string1[i] != '\0' && tolower(string1[i]) == tolower(string2[j])) {
         i++;
-    }
-    while(!isalpha(string2[j])) {
         j++;
+        SkipNonAlphaSymbols(&i, &j, string1, string2);
     }
 
-    for(;i < MAX_STR_LEN && j < MAX_STR_LEN &&
-        string1[i] != '\0' && tolower(string1[i]) == tolower(string2[j]); i++, j++) {
-        while(!isalpha(string1[i]) && i < MAX_STR_LEN && string1[i] != '\0') {
-            i++;
-        }
-        while(!isalpha(string2[j]) && j < MAX_STR_LEN && string1[j] != '\0') {
-            j++;
-        }
-    }
-
-    return (string1[i] > string2[i]);
+    return (tolower(string1[i]) > tolower(string2[j]));
 }
 
 void SwapStr(char* string1, char* string2) {
@@ -45,26 +37,11 @@ void SwapStr(char* string1, char* string2) {
     }
 }
 
-
-    // do {
-    //     while(!isalpha(string1[i])) {
-    //         printf("symbol %c is not alpha\n", string1[i]);
-    //         i++;
-    //     }
-    //     while(!isalpha(string2[j])) {
-    //         j++;
-    //         printf("symbol %c is not alpha\n", string2[j]);
-    //     }
-    //     printf("i = %d, j = %d\n", i, j);
-    // } while (i < MAX_STR_LEN && j < MAX_STR_LEN &&
-    //          string1[i] != '\0' &&
-    //          tolower(string1[i]) == tolower(string2[j]));
-
 static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2) {
     while(!isalpha(string1[*i]) && *i < MAX_STR_LEN && string1[*i] != '\0') {
-        *i++;
+        (*i)++;
     }
-    while(!isalpha(string2[*j]) && *j < MAX_STR_LEN && string1[*j] != '\0') {
-        *j++;
+    while(!isalpha(string2[*j]) && *j < MAX_STR_LEN && string2[*j] != '\0') {
+        (*j)++;
     }
 }

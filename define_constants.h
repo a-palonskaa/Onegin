@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-const int MAX_STR_LEN = 10;
-const int STR_CNT = 2;
+const int MAX_STR_LEN = 40;
+const int STR_CNT = 14;
 
 #endif /* DEFINE_CONSTANTS_H */
