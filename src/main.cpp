@@ -1,14 +1,16 @@
 #include <stdio.h>
 
 #include "test_program.h"
-#include "string_functions.h"
+#include "sort.h"
 
 int main() {
-    FILE* input_file = fopen("onegin.txt", "r");
+    FILE* input_file = fopen("./txtfiles/onegin.txt", "r");
 
     char text[STR_CNT][MAX_STR_LEN] = {};
+    char* index[STR_CNT] = {};
 
     for (int i = 0; i < STR_CNT; i++) {
+        index[i] = &text[i][0];
         int c;
         int j = 0;
         while(j < MAX_STR_LEN && (c = fgetc(input_file)) != '\n' && c != EOF) {
@@ -17,15 +19,9 @@ int main() {
         //fgets(&text[i][0],MAX_STR_LEN, input_file);
     }
 
-    for (int i = 0; i < STR_CNT; i++) {
-        for (int j = i + 1; j < STR_CNT; j++) {
-            if (CompareStr(text[i], text[j])) {
-                SwapStr(text[i], text[j]);
-            }
-        }
-    }
+    StrBubbleSort(index);
 
-    PrintTextTestMode(text);
+    PrintTextTestMode(index);
 
     fclose(input_file);
 }

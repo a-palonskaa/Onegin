@@ -1,4 +1,4 @@
-*.txt
+textfiles/
 run
 build/
 trash

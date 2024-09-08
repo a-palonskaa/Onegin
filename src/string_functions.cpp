@@ -24,17 +24,13 @@ bool CompareStr(char* string1, char* string2) {
     return (tolower(string1[i]) > tolower(string2[j]));
 }
 
-void SwapStr(char* string1, char* string2) {
+void SwapStr(char** string1, char** string2) {
     assert(string1 != nullptr);
     assert(string2 != nullptr);
 
-    char c = 0;
-
-    for (int i = 0; i < MAX_STR_LEN && (string1[i] != 0 || string2[i] != 0); i++) {
-        c = string1[i];
-        string1[i] = string2[i];
-        string2[i] = c;
-    }
+    char* c = *string1;
+    *string1 = *string2;
+    *string2 = c;
 }
 
 static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2) {
