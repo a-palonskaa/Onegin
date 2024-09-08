@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "define_constants.h"
 
-bool CompareStr(char* string1, char* string2);
-void SwapStr(char** string1, char** string2);
+bool CompareStr(size_t s1, size_t s2, strdata_t* text_strdata);
+void SwapStr(size_t s1, size_t s2, strdata_t* text_strdata);
 
 #endif /* STRING_FUNCTIONS_H */

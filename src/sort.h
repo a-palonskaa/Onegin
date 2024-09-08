@@ -5,6 +5,6 @@
 
 #include "define_constants.h"
 
-void StrBubbleSort(char* text[]);
+void StrBubbleSort(strdata_t* text_strdata);
 
 #endif /* SORT_H */

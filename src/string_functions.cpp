@@ -3,37 +3,40 @@
 
 #include "string_functions.h"
 
-static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2);
+static void SkipNonAlphaSymbols(size_t* s1, size_t* s2, const char* string1, const char* string2);
 
-bool CompareStr(char* string1, char* string2) {
-    assert(string1 != nullptr);
-    assert(string2 != nullptr);
+bool CompareStr(size_t s1, size_t s2, strdata_t* text_strdata) {
+    assert(text_strdata != nullptr);
 
-    int i = 0;
-    int j = 0;
+    size_t i = 0;
+    size_t j = 0;
 
-    SkipNonAlphaSymbols(&i, &j, string1, string2);
+    SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin);
 
-    while (i < MAX_STR_LEN && j < MAX_STR_LEN &&
-           string1[i] != '\0' && tolower(string1[i]) == tolower(string2[j])) {
+    while (i < text_strdata[s1].str_len - 1 && j < text_strdata[s2].str_len - 1 &&
+           text_strdata[s1].str_begin[i] != '\0' &&
+           tolower(text_strdata[s1].str_begin[i]) == tolower(text_strdata[s2].str_begin[j])) {
         i++;
         j++;
-        SkipNonAlphaSymbols(&i, &j, string1, string2);
+
+        SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin);
     }
 
-    return (tolower(string1[i]) > tolower(string2[j]));
+    return (tolower(text_strdata[s1].str_begin[i]) > tolower(text_strdata[s2].str_begin[j]));
 }
 
-void SwapStr(char** string1, char** string2) {
-    assert(string1 != nullptr);
-    assert(string2 != nullptr);
+void SwapStr(size_t s1, size_t s2, strdata_t* text_strdata) {
+    assert(text_strdata != nullptr);
 
-    char* c = *string1;
-    *string1 = *string2;
-    *string2 = c;
+    char* c = text_strdata[s1].str_begin;
+    size_t len = text_strdata[s1].str_len;
+    text_strdata[s1].str_begin = text_strdata[s2].str_begin;
+    text_strdata[s1].str_len = text_strdata[s2].str_len;
+    text_strdata[s2].str_len = len;
+    text_strdata[s2].str_begin = c;
 }
 
-static void SkipNonAlphaSymbols(int* i, int*j, const char* string1, const char* string2) {
+static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* string1, const char* string2) {
     while(!isalpha(string1[*i]) && *i < MAX_STR_LEN && string1[*i] != '\0') {
         (*i)++;
     }
