@@ -11,4 +11,11 @@ typedef struct {
     size_t str_len;
 } strdata_t;
 
+typedef enum {
+    FIRST = 0,
+    LAST  = 1
+} sort_mode_t;
+
+typedef bool (*cmpr_mode_t) (size_t s1, size_t s2, strdata_t* text_strdata);
+
 #endif /* DEFINE_CONSTANTS_H */

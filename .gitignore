@@ -2,3 +2,4 @@ textfiles/
 run
 build/
 trash
+.vscode
