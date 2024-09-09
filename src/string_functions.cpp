@@ -3,7 +3,7 @@
 
 #include "string_functions.h"
 
-static void SkipNonAlphaSymbols(size_t* s1, size_t* s2, const char* string1, const char* string2, sort_mode_t mode);
+static void SkipNonAlphaSymbols(size_t* s1, size_t* s2, const char* str1, const char* str2, sort_mode_t mode);
 
 bool CompareStrFirst(size_t s1, size_t s2, str_store_data_t* text_strdata) {
     assert(text_strdata != nullptr);
@@ -32,9 +32,9 @@ void SwapStr(size_t s1, size_t s2, str_store_data_t* text_strdata) {
     text_strdata[s1] = text_strdata[s2];
     text_strdata[s2] = strdata_s1_copy;
 }
-
-static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* string1, const char* string2, sort_mode_t mode) {
-    while(!isalpha(string1[*i]) && *i < MAX_STR_LEN && string1[*i] != '\0') {
+//ХУЙНЯ ПЕРЕДЕЛЫВАЙ - как будто копипаст и можно разделить
+static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* str1, const char* str2, sort_mode_t mode) {
+    while(!isalpha(str1[*i]) && *i < MAX_STR_LEN && str1[*i] != '\0') {
         if (mode == FIRST) {
             (*i)++;
         }
@@ -42,7 +42,7 @@ static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* string1, const
             (*i)--;
         }
     }
-    while(!isalpha(string2[*j]) && *j < MAX_STR_LEN && string2[*j] != '\0') {
+    while(!isalpha(str2[*j]) && *j < MAX_STR_LEN && str2[*j] != '\0') {
         if (mode == FIRST) {
             (*j)++;
         }
@@ -53,7 +53,7 @@ static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* string1, const
 }
 
 bool CompareStrLast(size_t s1, size_t s2, str_store_data_t* text_strdata) {
-        assert(text_strdata != nullptr);
+    assert(text_strdata != nullptr);
 
     size_t i = text_strdata[s1].str_len - 2;
     size_t j = text_strdata[s2].str_len - 2;

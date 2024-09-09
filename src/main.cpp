@@ -19,7 +19,7 @@ int main() {
     const size_t STR_CNT       = CountTextLines(input_file);
 
     str_store_data_t* str_store_data = (str_store_data_t*) calloc(STR_CNT, sizeof(str_store_data_t));
-    char* text                       = (char*) calloc(SYMBOL_AMOUNT, sizeof(char));
+    char* text = (char*) calloc(SYMBOL_AMOUNT, sizeof(char));
 
     cmpr_mode_t CompareStr = &CompareStrLast;
     str_data_t  str_data = {str_store_data, STR_CNT};
@@ -35,12 +35,10 @@ int main() {
         symbol_cnt += str_store_data[i].str_len;
     }
 
-   // StrQuickSort(str_store_data, 0, STR_CNT - 1, CompareStr);
     StrQuickSort(&str_data, 0, STR_CNT - 1, CompareStr);
 
-    //PrintTextTestMode(str_store_data, STR_CNT);
     PrintTextTestMode(&str_data);
-
+//ХУЙНЯ ПЕРЕДЕЛЫВАЙ - не оч смотрится
     free(str_store_data);
     str_store_data = nullptr;
     free(text);
