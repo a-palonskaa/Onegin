@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include "define_constants.h"
 
-void PrintTextTestMode(strdata_t* text_strdata);
-void PrintSymbolsTestMode(strdata_t* text_strdata);
+void PrintTextTestMode(str_data_t* str_data);
+void PrintSymbolsTestMode(str_data_t* str_data);
 //ХУЙНЯ ПЕРЕДЕЛЫВАЙ - добавить флаг в ф-цию и в зависимости от него
 //выводить либо посимвольно,и либо как пожму
 

@@ -5,7 +5,7 @@
 
 static void SkipNonAlphaSymbols(size_t* s1, size_t* s2, const char* string1, const char* string2, sort_mode_t mode);
 
-bool CompareStrFirst(size_t s1, size_t s2, strdata_t* text_strdata) {
+bool CompareStrFirst(size_t s1, size_t s2, str_store_data_t* text_strdata) {
     assert(text_strdata != nullptr);
 
     size_t i = 0;
@@ -25,10 +25,10 @@ bool CompareStrFirst(size_t s1, size_t s2, strdata_t* text_strdata) {
     return (tolower(text_strdata[s1].str_begin[i]) > tolower(text_strdata[s2].str_begin[j]));
 }
 
-void SwapStr(size_t s1, size_t s2, strdata_t* text_strdata) {
+void SwapStr(size_t s1, size_t s2, str_store_data_t* text_strdata) {
     assert(text_strdata != nullptr);
 
-    strdata_t strdata_s1_copy = text_strdata[s1];
+    str_store_data_t strdata_s1_copy = text_strdata[s1];
     text_strdata[s1] = text_strdata[s2];
     text_strdata[s2] = strdata_s1_copy;
 }
@@ -52,7 +52,7 @@ static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* string1, const
     }
 }
 
-bool CompareStrLast(size_t s1, size_t s2, strdata_t* text_strdata) {
+bool CompareStrLast(size_t s1, size_t s2, str_store_data_t* text_strdata) {
         assert(text_strdata != nullptr);
 
     size_t i = text_strdata[s1].str_len - 2;

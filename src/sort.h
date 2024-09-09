@@ -5,7 +5,7 @@
 
 #include "define_constants.h"
 
-void StrBubbleSort(strdata_t* text_strdata, cmpr_mode_t CompareStr);
-void StrQuickSort(strdata_t* text_strdata, size_t left, size_t right, cmpr_mode_t CompareStr);
+void StrBubbleSort(str_data_t* str_data, cmpr_mode_t CompareStr);
+void StrQuickSort(str_data_t* str_data, size_t left, size_t right, cmpr_mode_t CompareStr);
 
 #endif /* SORT_H */
