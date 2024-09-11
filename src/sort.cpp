@@ -1,33 +1,33 @@
 #include "sort.h"
 #include "string_functions.h"
 
-void StrBubbleSort(str_data_t* str_data, cmpr_mode_t CompareStr) {
-    for (size_t i = 0; i < str_data->str_cnt; i++) {
-        for (size_t j = i + 1; j < str_data->str_cnt; j++) {
-            if (CompareStr(i, j, str_data->str_store_data)) {
-                SwapStr(i, j, str_data->str_store_data);
+void StrBubbleSort(text_t* text, cmpr_mode_t сompare_str) {
+    for (size_t i = 0; i < text->strings_amount; i++) {
+        for (size_t j = i + 1; j < text->strings_amount; j++) {
+            if (сompare_str(i, j, text->strings)) {
+                SwapStrings(i, j, text->strings);
             }
         }
     }
 }
 
-void StrQuickSort(str_data_t* str_data, size_t left, size_t right, cmpr_mode_t CompareStr){
+void StrQuickSort(text_t* text, size_t left, size_t right, cmpr_mode_t сompare_str){
     if (left >= right) {
         return;
     }
 
-    SwapStr(left, (left + right) / 2, str_data->str_store_data);
+    SwapStrings(left, (left + right) / 2, text->strings);
 
     size_t last = left;
 
     for(size_t i = left + 1; i <= right; i++) {
-        if (!CompareStr(i, left, str_data->str_store_data)) {
-            SwapStr(++last, i, str_data->str_store_data);
+        if (!сompare_str(i, left, text->strings)) {
+            SwapStrings(++last, i, text->strings);
         }
     }
 
-    SwapStr(left, last, str_data->str_store_data);
+    SwapStrings(left, last, text->strings);
 
-    StrQuickSort(str_data, left, last, CompareStr);
-    StrQuickSort(str_data, last + 1, right, CompareStr);
+    StrQuickSort(text, left, last, сompare_str);
+    StrQuickSort(text, last + 1, right, сompare_str);
 }

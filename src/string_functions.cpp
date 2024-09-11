@@ -3,70 +3,69 @@
 
 #include "string_functions.h"
 
-static void SkipNonAlphaSymbols(size_t* s1, size_t* s2, const char* str1, const char* str2, sort_mode_t mode);
+static void SkipNonAlphaSymbols(size_t* i, const char* str, sort_mode_t mode);
 
-bool CompareStrFirst(size_t s1, size_t s2, str_store_data_t* text_strdata) {
+bool CompareStringsForward(size_t s1, size_t s2, string_t* text_strdata) {
     assert(text_strdata != nullptr);
 
     size_t i = 0;
     size_t j = 0;
 
-    SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin, FIRST);
+    SkipNonAlphaSymbols(&i, text_strdata[s1].begin, FIRST);
+    SkipNonAlphaSymbols(&j, text_strdata[s2].begin, FIRST);
 
-    while (i < text_strdata[s1].str_len - 1 && j < text_strdata[s2].str_len - 1 &&
-           text_strdata[s1].str_begin[i] != '\0' &&
-           tolower(text_strdata[s1].str_begin[i]) == tolower(text_strdata[s2].str_begin[j])) {
+    while (i < text_strdata[s1].length - 1 && j < text_strdata[s2].length - 1 &&
+           text_strdata[s1].begin[i] != '\0' &&
+           tolower(text_strdata[s1].begin[i]) == tolower(text_strdata[s2].begin[j])) {
         i++;
         j++;
 
-        SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin, FIRST);
+        SkipNonAlphaSymbols(&i, text_strdata[s1].begin, FIRST);
+        SkipNonAlphaSymbols(&j, text_strdata[s2].begin, FIRST);
     }
 
-    return (tolower(text_strdata[s1].str_begin[i]) > tolower(text_strdata[s2].str_begin[j]));
+    return (tolower(text_strdata[s1].begin[i]) > tolower(text_strdata[s2].begin[j]));
 }
 
-void SwapStr(size_t s1, size_t s2, str_store_data_t* text_strdata) {
+void SwapStrings(size_t s1, size_t s2, string_t* text_strdata) {
     assert(text_strdata != nullptr);
 
-    str_store_data_t strdata_s1_copy = text_strdata[s1];
+    string_t strdata_s1_copy = text_strdata[s1];
     text_strdata[s1] = text_strdata[s2];
     text_strdata[s2] = strdata_s1_copy;
 }
-//ХУЙНЯ ПЕРЕДЕЛЫВАЙ - как будто копипаст и можно разделить
-static void SkipNonAlphaSymbols(size_t* i, size_t* j, const char* str1, const char* str2, sort_mode_t mode) {
-    while(!isalpha(str1[*i]) && *i < MAX_STR_LEN && str1[*i] != '\0') {
-        if (mode == FIRST) {
+
+static void SkipNonAlphaSymbols(size_t* i, const char* str, sort_mode_t mode) {
+    if (mode == FIRST) {
+        while(!isalpha(str[*i]) && *i < MAX_STR_LEN && str[*i] != '\0') {
             (*i)++;
         }
-        else {
+    }
+    else {
+        while(!isalpha(str[*i]) && *i < MAX_STR_LEN && str[*i] != '\0') {
             (*i)--;
         }
     }
-    while(!isalpha(str2[*j]) && *j < MAX_STR_LEN && str2[*j] != '\0') {
-        if (mode == FIRST) {
-            (*j)++;
-        }
-        else {
-            (*j)--;
-        }
-    }
 }
 
-bool CompareStrLast(size_t s1, size_t s2, str_store_data_t* text_strdata) {
+bool CompareStringsBackward(size_t s1, size_t s2, string_t* text_strdata) {
     assert(text_strdata != nullptr);
 
-    size_t i = text_strdata[s1].str_len - 2;
-    size_t j = text_strdata[s2].str_len - 2;
+    size_t i = text_strdata[s1].length - 2;
+    size_t j = text_strdata[s2].length - 2;
 
-    SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin, LAST);
+    SkipNonAlphaSymbols(&i, text_strdata[s1].begin, LAST);
+    SkipNonAlphaSymbols(&j, text_strdata[s2].begin, LAST);
 
     while (i > 0 && j > 0 &&
-           tolower(text_strdata[s1].str_begin[i]) == tolower(text_strdata[s2].str_begin[j])) {
+           tolower(text_strdata[s1].begin[i]) == tolower(text_strdata[s2].begin[j])) {
         i--;
         j--;
 
-        SkipNonAlphaSymbols(&i, &j, text_strdata[s1].str_begin, text_strdata[s2].str_begin, LAST);
+        SkipNonAlphaSymbols(&i, text_strdata[s1].begin, LAST);
+        SkipNonAlphaSymbols(&j, text_strdata[s2].begin, LAST);
     }
 
-    return (tolower(text_strdata[s1].str_begin[i]) > tolower(text_strdata[s2].str_begin[j]));
+    return (tolower(text_strdata[s1].begin[i]) > tolower(text_strdata[s2].begin[j]));
 }
+

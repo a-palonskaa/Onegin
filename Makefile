@@ -16,7 +16,7 @@ LDFLAGS =
 SOURCE_DIR  = src
 BUILD_DIR   = build
 
-SOURCES = main.cpp string_functions.cpp test_program.cpp sort.cpp
+SOURCES = main.cpp string_functions.cpp test_program.cpp sort.cpp text_t_lib.cpp
 SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
 
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
