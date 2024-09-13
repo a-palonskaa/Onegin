@@ -5,7 +5,7 @@
 #include "sort.h"
 #include "string_functions.h"
 
-void StringBubbleSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
+void BubbleSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
     for (size_t i = 0; i < nel; i++) {
         for (size_t j = i + 1; j < nel; j++) {
             if (compar(((char*) base + i * width), ((char*) base + j * width)) == 1) {

@@ -4472,7 +4472,6 @@ Initial text:
 		Uspekh nas pervii okrilil;
 		Starik Derzhavin nas zametil
 		I, v grob skhodya, blagoslovil.
-		..........................................
 		I ya, v zakon sebe vmenyaya
 		Strastei yedinii proizvol,
 		S tolpoyu chuvstva razdelyaya,
@@ -4786,7 +4785,6 @@ Initial text:
 		Na venzel, dvum sestritsam dannii,
 		Na lozh zhurnalov, na voinu,
 		Na sneg i na svoyu zhenu.
-		..........................................
 		Tut bil Prolasov, zasluzhivshii
 		Izvestnost nizostyu dushi,
 		Vo vsekh albomakh pritupivshii,
@@ -5508,7 +5506,6 @@ Initial text:
 		Ot utrennikh spokoinikh vod
 		Vivodit s solntsem za soboyu, - i proch.
 		Buyanov, moi sosed,
-		...............................
 		Prishel ko mne vchera s nebritimi usami,
 		Rastrepannii, v pukhu, v kartuze s kozirkom...
 		A ti, mladoe vdokhnovene,
@@ -6990,8 +6987,8 @@ Backward sorting:
 		Pod nebom Shillera i Gete
 		U nas teper ne to v predmete:
 		Zachem u vas ya na primete?
-		I v molchalivom kabinete
 		I v molchalivom kabinete,
+		I v molchalivom kabinete
 		Kuda stremglav v yamskoi karete
 		Kto tam v malinovom berete
 		Tut, verno, klyatvi vi prochtete
@@ -11112,9 +11109,6 @@ Backward sorting:
 
 
 Forward sorting:
-		..........................................
-		...............................
-		..........................................
 		A bez togo vam rai ne rai.
 		A bilo mne trinadtsat let.
 		A budut lish besit yego.
@@ -12598,8 +12592,8 @@ Forward sorting:
 		I v Letnii sad gulyat vodil.
 		I vmeste neskolko minut
 		I v mislyakh molvila: vot on!
-		I v molchalivom kabinete
 		I v molchalivom kabinete,
+		I v molchalivom kabinete
 		I, v nem gluboko pogruzhen,
 		I v neobdumannom pisme
 		I vnov zadumchivii, unilii

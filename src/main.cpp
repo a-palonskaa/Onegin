@@ -6,19 +6,24 @@
 #include "sort.h"
 #include "text_t_lib.h"
 #include "string_functions.h"
-// TODO: добавить флаги для файлов argv argc (если сильно хочется прибивать пути, то через константы)
-int main() {
-    const char* ONEGIN = "./txtfiles/onegin_full.txt";
-    const char* SORTED_ONEGIN = "./txtfiles/sorted_onegin_full.txt";
+#include "arg_parser.h"
 
-    FILE* input_file  = fopen(ONEGIN, "r");
+int main(int argc, const char *argv[]) {
+    flags_t flags = {};
+    InitiallizeFlags(&flags);
+
+    if (ArgParser(argc, argv, &flags) == INPUT_ERROR) {
+        return EXIT_FAILURE;
+    }
+
+    FILE* input_file  = fopen(flags.input_file_name, "r");
 
     if (input_file == nullptr) {
         perror("FAILED TO OPEN INPUT FILE\n");
         return EXIT_FAILURE;
     }
 
-    FILE* output_file = fopen(SORTED_ONEGIN, "w");
+    FILE* output_file = fopen(flags.output_file_name, "w");
 
     if (output_file == nullptr) {
         perror("FAILED TO OPEN OUTPUT FILE\n");
@@ -29,8 +34,18 @@ int main() {
 
     StringCtor(&text, input_file);
 
-    QuickSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
-    QuickSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+    if (flags.sort_mode == QUICK_SORT) {
+        printf("Sort text with  quick sort\n");
+
+        QuickSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
+        QuickSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+    }
+    else {
+        printf("Sort text with bubble sort\n");
+
+        BubbleSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
+        BubbleSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+    }
 
     PrintSortedText(output_file, &text);
 
@@ -49,4 +64,3 @@ int main() {
     return EXIT_SUCCESS;
 }
 
-//merge sort
