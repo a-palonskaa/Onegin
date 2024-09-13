@@ -3,17 +3,34 @@
 
 #include "text_t_lib.h"
 
-size_t CountTextSymbols(FILE* input_file) {
+ssize_t CountTextSymbols(FILE* input_file) {
     assert(input_file != nullptr);
 
     struct stat file_data = {};
+
     if (fstat(fileno(input_file), &file_data) == -1) {
         perror("FAILED TO READ THE FILE\n");
+        return -1;
+    }
+
+    if (file_data.st_size == 0) {
+        perror("EMPTY FILE\n");
         return 0;
     }
 
-    return (size_t) file_data.st_size;
+    return (ssize_t) file_data.st_size;
 }
+
+// ssize_t CountTextSymbolsTest(FILE* input_file) {
+//     assert(input_file != nullptr);
+//
+//     fseek(input_file, 0L, SEEK_END);
+//     ssize_t size = (ssize_t) ftell(input_file);
+//     printf("%d", size);
+//     return (ssize_t) size;
+// }
+
+
 
 size_t CountTextLines(text_t* text) {
     assert(text != nullptr);
@@ -60,11 +77,15 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     assert(input_file != nullptr);
     assert(text != nullptr);
 
-    text->symbols_amount = CountTextSymbols(input_file);
-//ХУЙНЯ ssize_t
-    if (!text->symbols_amount) {
+    ssize_t symbols_amount = CountTextSymbols(input_file);
+
+    if (symbols_amount == -1) {
         return FILE_READ_ERROR;
     }
+    else if (symbols_amount == 0) {
+        return EMPTY_FILE_ERROR;
+    }
+    text->symbols_amount = (size_t) symbols_amount;
 
     text->symbols = (char*) calloc(text->symbols_amount, sizeof(char));
 
@@ -130,18 +151,3 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     text->symbols[text->symbols_amount - 1] = '\0';
 }
 
-
-
-// man new - не смотреть, гуглить
-// int* a = new int(5);
-// delete a;
-// string_t* s = new string_t(file);
-// delete s;
-
-// string_t* s = nullptr;
-// NewString(&s, file);
-// string_t* s = NewString(file); calloc на структуру, пот7ом ctor
-//объект либо построен полностью либо никак, если на каком-то этапе не выделилась памть, я чищу всё предыдущее и выхожу(руками, не деструктором)
-// DeleteString(&s);, dtor, потом очистить s(string_*) т.е  в обратном порядке(работает с консистентными объектами)
-
-//fseek, feof, fgetc

@@ -4,7 +4,6 @@
 
 #include "sort.h"
 #include "string_functions.h"
-#include "string.h"
 
 void StringBubbleSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
     for (size_t i = 0; i < nel; i++) {
@@ -16,23 +15,27 @@ void StringBubbleSort(void *base, size_t nel, size_t width, int (*compar)(const 
     }
 }
 
-// void StrQuickSort(text_t* text, size_t left, size_t right, cmpr_mode_t сompare_str){
-//     if (left >= right) {
-//         return;
-//     }
-//
-//     SwapStrings(left, (left + right) / 2, text->strings);
-//
-//     size_t last = left;
-//
-//     for(size_t i = left + 1; i <= right; i++) {
-//         if (!сompare_str(i, left, text->strings)) {
-//             SwapStrings(++last, i, text->strings);
-//         }
-//     }
-//
-//     SwapStrings(left, last, text->strings);
-//
-//     StrQuickSort(text, left, last, сompare_str);
-//     StrQuickSort(text, last + 1, right, сompare_str);
-// }
+void StrQuickSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
+    StrQuickSortBasic(base, 0, nel - 1, compar, width);
+}
+
+void StrQuickSortBasic(void *base, size_t left, size_t right, int (*compar)(const void *, const void *), size_t width){
+    if (left >= right) {
+        return;
+    }
+
+    SwapStrings(((char*) base + left * width), ((char*) base + ((left + right) / 2) * width), width);
+
+    size_t last = left;
+
+    for(size_t i = left + 1; i <= right; i++) {
+        if (compar(((char*) base + i * width), ((char*) base + left * width)) == -1) {
+            SwapStrings(((char*) base + (++last) * width), ((char*) base + i * width), width);
+        }
+    }
+
+    SwapStrings(((char*) base + left * width), ((char*) base + last * width), width);
+
+    StrQuickSortBasic(base, left, last, compar, width);
+    StrQuickSortBasic(base, last + 1, right, compar, width);
+}

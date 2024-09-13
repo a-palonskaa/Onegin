@@ -3,10 +3,9 @@
 
 #include <stdio.h>
 
-#include "define_constants.h"
-
-//void StrQuickSort(text_t* text, size_t left, size_t right, cmpr_mode_t сompare_str);
 void StringBubbleSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *));
+void StrQuickSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *));
+void StrQuickSortBasic(void *base, size_t left, size_t right, int (*compar)(const void *, const void *), size_t width);
 
 #endif /* SORT_H */
 

@@ -5,7 +5,7 @@
 #include "string_functions.h"
 
 void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode) {
-    if (mode == FIRST) {
+    if (mode == FORWARD) {
         while(!isalpha(str->begin[*i]) && *i < str->length && str->begin[*i] != '\0') {
             (*i)++;
         }
@@ -27,8 +27,8 @@ int CompareStringsForward(const void *str1, const void *str2) {
     size_t i = 0;
     size_t j = 0;
 
-    SkipNonAlphaSymbols(&i, s1, FIRST);
-    SkipNonAlphaSymbols(&j, s2, FIRST);
+    SkipNonAlphaSymbols(&i, s1, FORWARD);
+    SkipNonAlphaSymbols(&j, s2, FORWARD);
 
     while (i < s1->length - 1 && j < s2->length - 1 &&
            s1->begin[i] != '\0' &&
@@ -36,8 +36,8 @@ int CompareStringsForward(const void *str1, const void *str2) {
         i++;
         j++;
 
-        SkipNonAlphaSymbols(&i, s1, FIRST);
-        SkipNonAlphaSymbols(&j, s2, FIRST);
+        SkipNonAlphaSymbols(&i, s1, FORWARD);
+        SkipNonAlphaSymbols(&j, s2, FORWARD);
     }
 
     return (tolower(s1->begin[i]) > tolower(s2->begin[j]))  ? 1 :
@@ -54,16 +54,16 @@ int CompareStringsBackward(const void *str1, const void *str2) {
     size_t i = s1->length - 2;
     size_t j = s2->length - 2;
 
-    SkipNonAlphaSymbols(&i, s1, LAST);
-    SkipNonAlphaSymbols(&j, s2, LAST);
+    SkipNonAlphaSymbols(&i, s1, BACKWARD);
+    SkipNonAlphaSymbols(&j, s2, BACKWARD);
 
     while (i > 0 && j > 0 &&
            tolower(s1->begin[i]) == tolower(s2->begin[j])) {
         i--;
         j--;
 
-        SkipNonAlphaSymbols(&i, s1, LAST);
-        SkipNonAlphaSymbols(&j, s2, LAST);
+        SkipNonAlphaSymbols(&i, s1, BACKWARD);
+        SkipNonAlphaSymbols(&j, s2, BACKWARD);
     }
 
     return (tolower(s1->begin[i]) > tolower(s2->begin[j]))  ? 1 :
@@ -72,8 +72,10 @@ int CompareStringsBackward(const void *str1, const void *str2) {
 
 void SwapStrings(void* s1, void* s2, size_t width) {
     size_t i = 0;
+
     size_t n = width / sizeof(uint64_t);
     width = width - n * sizeof(uint64_t);
+
     for (; i < n; i++) {
         uint64_t s = 0;
         memcpy(&s, (uint64_t*) s1 + i, sizeof(uint64_t));
@@ -84,6 +86,7 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     i *= 2;
     n = width / sizeof(uint32_t);
     width = width - n * sizeof(uint32_t);
+
     for (; i < n; i++) {
         uint32_t s = 0;
         memcpy(&s, (uint32_t*) s1 + i, sizeof(uint32_t));
@@ -95,6 +98,7 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     i *= 2;
     n = width / sizeof(uint16_t);
     width = width - n * sizeof(uint16_t);
+
     for (; i < n; i++) {
         uint16_t s = 0;
         memcpy(&s, (uint16_t*) s1 + i, sizeof(uint16_t));
@@ -105,6 +109,7 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     i *= 2;
     n = width / sizeof(uint8_t);
     width = width - n * sizeof(uint8_t);
+
     for (; i < n; i++) {
         uint8_t s = 0;
         memcpy(&s, (uint8_t*) s1 + i, sizeof(uint8_t));
@@ -115,6 +120,7 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     i *= 8;
     n = width / sizeof(char);
     width = width - n * sizeof(char);
+
     for (; i < n; i++) {
         char s = 0;
         memcpy(&s, (char*) s1 + i, sizeof(char));

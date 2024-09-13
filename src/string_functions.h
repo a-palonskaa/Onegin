@@ -2,7 +2,13 @@
 #define STRING_FUNCTIONS_H
 
 #include <stdio.h>
-#include "define_constants.h"
+
+#include "text_t_lib.h"
+
+typedef enum {
+    FORWARD  = 0,
+    BACKWARD = 1
+} sort_mode_t;
 
 void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode);
 void SwapStrings(void* s1, void* s2, size_t width);

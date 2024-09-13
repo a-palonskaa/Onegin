@@ -2,7 +2,8 @@
 #define TEST_PROGRAM_H
 
 #include <stdio.h>
-#include "define_constants.h"
+
+#include "text_t_lib.h"
 
 void PrintTextTestMode(text_t* text);
 void PrintSymbolsTestMode(text_t* text);

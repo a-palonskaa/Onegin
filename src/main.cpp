@@ -21,8 +21,8 @@ int main() {
 
     StringCtor(&text, input_file);
 
-    StringBubbleSort(text.strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
-
+    StrQuickSort(text.strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
+    //StringBubbleSort(text.strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
     PrintTextTestMode(&text);
 
     StringDtor(&text);
@@ -35,3 +35,4 @@ int main() {
     return EXIT_SUCCESS;
 }
 
+//merge sort

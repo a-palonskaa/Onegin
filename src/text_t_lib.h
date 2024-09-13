@@ -1,5 +1,5 @@
-#ifndef TEXT_INF_LIB_H //ХУЙНЯ - rename lib (XXinfXX)
-#define TEXT_INF_LIB_H
+#ifndef TEXT_T_LIB_H //ХУЙНЯ - rename lib (XXinfXX)
+#define TEXT_T_LIB_H
 
 #include <stdio.h>
 
@@ -19,17 +19,21 @@ typedef enum {
     NO_ERRORS               = 0,
     FILE_READ_ERROR         = 1,
     MEMORY_ALLOCATE_ERROR   = 2,
-    INFILE_PTR_MOVING_ERROR = 3
+    INFILE_PTR_MOVING_ERROR = 3,
+    EMPTY_FILE_ERROR        = 4
 } error_t;
 
-size_t CountTextSymbols(FILE* input_file);
+// ssize_t CountTextSymbolsTest(FILE* input_file);
+ssize_t CountTextSymbols(FILE* input_file);
 size_t CountTextLines(text_t* text);
-void IndexStrings(text_t* text);
-error_t StringCtor(text_t* text, FILE* input_file);
+
 void GetTextSymbols(text_t* text, FILE* input_file);
+void IndexStrings(text_t* text);
+
+error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
 
 // BIOS
 
-#endif /* TEXT_INF_LIB_H */
+#endif /* TEXT_T_LIB_H */
 
