@@ -87,11 +87,12 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     n = width / sizeof(uint32_t);
     width = width - n * sizeof(uint32_t);
 
-    for (; i < n; i++) {
+    if (n) {
         uint32_t s = 0;
         memcpy(&s, (uint32_t*) s1 + i, sizeof(uint32_t));
         memcpy((uint32_t*) s1 + i, (uint32_t*) s2 + i, sizeof(uint32_t));
         memcpy((uint32_t*) s2 + i, &s, sizeof(uint32_t));
+        i++;
 
     }
 
@@ -99,33 +100,24 @@ void SwapStrings(void* s1, void* s2, size_t width) {
     n = width / sizeof(uint16_t);
     width = width - n * sizeof(uint16_t);
 
-    for (; i < n; i++) {
+    if (n) {
         uint16_t s = 0;
         memcpy(&s, (uint16_t*) s1 + i, sizeof(uint16_t));
         memcpy((uint16_t*) s1 + i, (uint16_t*) s2 + i, sizeof(uint16_t));
         memcpy((uint16_t*) s2 + i, &s, sizeof(uint16_t));
+        i++;
     }
 
     i *= 2;
     n = width / sizeof(uint8_t);
     width = width - n * sizeof(uint8_t);
 
-    for (; i < n; i++) {
+    if (n) {
         uint8_t s = 0;
         memcpy(&s, (uint8_t*) s1 + i, sizeof(uint8_t));
         memcpy((uint8_t*) s1 + i, (uint8_t*) s2 + i, sizeof(uint8_t));
         memcpy((uint8_t*) s2 + i, &s, sizeof(uint8_t));
-    }
-
-    i *= 8;
-    n = width / sizeof(char);
-    width = width - n * sizeof(char);
-
-    for (; i < n; i++) {
-        char s = 0;
-        memcpy(&s, (char*) s1 + i, sizeof(char));
-        memcpy((char*) s1 + i, (char*) s2 + i, sizeof(char));
-        memcpy((char*) s2 + i, &s, sizeof(char));
+        i++;
     }
 }
 

@@ -1,4 +1,4 @@
-#ifndef TEXT_T_LIB_H //ХУЙНЯ - rename lib (XXinfXX)
+#ifndef TEXT_T_LIB_H
 #define TEXT_T_LIB_H
 
 #include <stdio.h>
@@ -11,7 +11,9 @@ typedef struct {
 typedef struct {
     size_t symbols_amount;
     size_t strings_amount;
-    string_t* strings;
+    string_t* nonsorted_strings;
+    string_t* forward_sorted_strings;
+    string_t* backward_sorted_strings;
     char* symbols;
 } text_t;
 
@@ -23,7 +25,7 @@ typedef enum {
     EMPTY_FILE_ERROR        = 4
 } error_t;
 
-// ssize_t CountTextSymbolsTest(FILE* input_file);
+ssize_t CountTextSymbolsTest(FILE* input_file);
 ssize_t CountTextSymbols(FILE* input_file);
 size_t CountTextLines(text_t* text);
 

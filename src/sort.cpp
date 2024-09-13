@@ -15,11 +15,11 @@ void StringBubbleSort(void *base, size_t nel, size_t width, int (*compar)(const 
     }
 }
 
-void StrQuickSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
-    StrQuickSortBasic(base, 0, nel - 1, compar, width);
+void QuickSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
+    QuickSortBasic(base, 0, nel - 1, compar, width);
 }
 
-void StrQuickSortBasic(void *base, size_t left, size_t right, int (*compar)(const void *, const void *), size_t width){
+void QuickSortBasic(void *base, size_t left, size_t right, int (*compar)(const void *, const void *), size_t width){
     if (left >= right) {
         return;
     }
@@ -36,6 +36,6 @@ void StrQuickSortBasic(void *base, size_t left, size_t right, int (*compar)(cons
 
     SwapStrings(((char*) base + left * width), ((char*) base + last * width), width);
 
-    StrQuickSortBasic(base, left, last, compar, width);
-    StrQuickSortBasic(base, last + 1, right, compar, width);
+    QuickSortBasic(base, left, last, compar, width);
+    QuickSortBasic(base, last + 1, right, compar, width);
 }

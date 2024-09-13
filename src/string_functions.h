@@ -7,7 +7,8 @@
 
 typedef enum {
     FORWARD  = 0,
-    BACKWARD = 1
+    BACKWARD = 1,
+    NO_SORT  = 2
 } sort_mode_t;
 
 void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode);
