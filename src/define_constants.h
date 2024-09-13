@@ -12,7 +12,5 @@ typedef enum {
     LAST  = 1
 } sort_mode_t;
 
-typedef bool (*cmpr_mode_t) (size_t s1, size_t s2, string_t* text_strdata);
-
 #endif /* DEFINE_CONSTANTS_H */
 

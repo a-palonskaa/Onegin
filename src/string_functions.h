@@ -4,11 +4,11 @@
 #include <stdio.h>
 #include "define_constants.h"
 
-bool CompareStringsForward(size_t s1, size_t s2, string_t* text_strdata);
-bool CompareStringsBackward(size_t s1, size_t s2, string_t* text_strdata);
-void SwapStrings(size_t s1, size_t s2, string_t* text_strdata);
+void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode);
+void SwapStrings(void* s1, void* s2, size_t width);
 
-int CompareStringsForwardTest(const void *s1, const void *s2);
+int CompareStringsForward(const void *str1, const void *str2);
+int CompareStringsBackward(const void *str1, const void *str2);
 
 #endif /* STRING_FUNCTIONS_H */
 

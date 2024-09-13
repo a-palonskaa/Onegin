@@ -61,7 +61,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     assert(text != nullptr);
 
     text->symbols_amount = CountTextSymbols(input_file);
-
+//ХУЙНЯ ssize_t
     if (!text->symbols_amount) {
         return FILE_READ_ERROR;
     }
