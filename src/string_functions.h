@@ -4,12 +4,7 @@
 #include <stdio.h>
 
 #include "text_t_lib.h"
-
-typedef enum {
-    FORWARD  = 0,
-    BACKWARD = 1,
-    NO_SORT  = 2
-} sort_mode_t;
+#include "define_constants.h"
 
 void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode);
 void SwapStrings(void* s1, void* s2, size_t width);

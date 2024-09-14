@@ -21,7 +21,7 @@ SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
 
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 
-EXECUTABLE = $(BUILD_DIR)/run
+EXECUTABLE = $(BUILD_DIR)/meow
 
 .PHONY: all
 

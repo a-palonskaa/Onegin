@@ -7,6 +7,7 @@
 #include "text_t_lib.h"
 #include "string_functions.h"
 #include "arg_parser.h"
+#include "define_constants.h"
 
 int main(int argc, const char *argv[]) {
     flags_t flags = {};
@@ -32,22 +33,30 @@ int main(int argc, const char *argv[]) {
 
     text_t text = {};
 
-    StringCtor(&text, input_file);
+    if (StringCtor(&text, input_file) != NO_ERRORS) {
+        return EXIT_FAILURE;
+    }
 
-    if (flags.sort_mode == QUICK_SORT) {
-        printf("Sort text with  quick sort\n");
+    if (flags.sort_type == QUICK_SORT) {
+        printf("Sort text with  quick sort.\n");
 
         QuickSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
         QuickSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
     }
     else {
-        printf("Sort text with bubble sort\n");
+        printf("Sort text with bubble sort.\n");
 
         BubbleSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
         BubbleSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
     }
 
-    PrintSortedText(output_file, &text);
+    PrintSortedText(output_file, &text, &flags);
+
+    // BubbleSort(text.nonsorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
+    // PrintTextTestMode(output_file, &text, NO_SORT);
+    // BubbleSort(text.nonsorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+    // PrintTextTestMode(output_file, &text, NO_SORT);
+    // PrintNonSortedText(output_file, &text);
 
     StringDtor(&text);
 

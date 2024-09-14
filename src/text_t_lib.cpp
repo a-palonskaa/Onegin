@@ -4,9 +4,9 @@
 
 #include "text_t_lib.h"
 
-const int CALLOCED_ARRAYS_CNT = 4; //ХУЙНЯ - ?????
+const int CALLOCED_ARRAYS_CNT = 4;
 
-static void EmergencyDtor(text_t* text, unsigned int calloc_cnt);
+static void ArraysDtor(text_t* text, unsigned int calloc_cnt);
 
 ssize_t CountTextSymbols(FILE* input_file) {
     assert(input_file != nullptr);
@@ -65,7 +65,7 @@ void IndexStrings(text_t* text) {
     size_t j = 0;
     const size_t str_cnt = text->strings_amount;
     const size_t smb_cnt = text->symbols_amount;
-
+//ХУЙНЯ - или через memcpy эти массивчики перекопировать?? //функция копирования структуры
     text->nonsorted_strings[j].begin = text->symbols;
     text->backward_sorted_strings[j].begin = text->symbols;
     text->forward_sorted_strings[j].begin  = text->symbols;
@@ -87,6 +87,11 @@ void IndexStrings(text_t* text) {
             j++;
         }
     }
+
+    if (text->symbols[smb_cnt - 2] == '\n') {
+        text->symbols[smb_cnt - 2] = '\0';
+    }
+
     text->nonsorted_strings[str_cnt - 1].length = (size_t) (&text->symbols[smb_cnt - 1] -
                                                             text->nonsorted_strings[str_cnt - 1].begin);
     text->backward_sorted_strings[str_cnt - 1].length = text->nonsorted_strings[str_cnt - 1].length;
@@ -106,6 +111,8 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     else if (symbols_amount == 0) {
         return EMPTY_FILE_ERROR;
     }
+
+    symbols_amount++;
 
     text->symbols_amount = (size_t) symbols_amount;
 
@@ -127,7 +134,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
-        EmergencyDtor(text, calloc_cnt);
+        ArraysDtor(text, calloc_cnt);
         perror("FAILED TO MOVE POINTER IN THE FILE\n");
         return INFILE_PTR_MOVING_ERROR;
     }
@@ -139,7 +146,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     text->nonsorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
 
     if (text->nonsorted_strings == nullptr) {
-        EmergencyDtor(text, calloc_cnt);
+        ArraysDtor(text, calloc_cnt);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
@@ -149,7 +156,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     text->forward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
 
     if (text->forward_sorted_strings == nullptr) {
-        EmergencyDtor(text, calloc_cnt);
+        ArraysDtor(text, calloc_cnt);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
@@ -159,7 +166,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     text->backward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
 
     if (text->backward_sorted_strings == nullptr) {
-        EmergencyDtor(text, calloc_cnt);
+        ArraysDtor(text, calloc_cnt);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
@@ -173,7 +180,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 void StringDtor(text_t* text) {
     assert(text != nullptr);
 
-    EmergencyDtor(text, CALLOCED_ARRAYS_CNT); //ХУЙНЯ - ?
+    ArraysDtor(text, CALLOCED_ARRAYS_CNT); //ХУЙНЯ - name, logic?
 
     text->strings_amount = 0;
     text->symbols_amount = 0;
@@ -193,7 +200,7 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     text->symbols[text->symbols_amount - 1] = '\0';
 }
 
-static void EmergencyDtor(text_t* text, unsigned int calloc_cnt) {
+static void ArraysDtor(text_t* text, unsigned int calloc_cnt) {
     switch (calloc_cnt) {
         case 4:
             free(text->backward_sorted_strings);

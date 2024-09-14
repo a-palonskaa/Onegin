@@ -8,7 +8,7 @@
 void BubbleSort(void *base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
     for (size_t i = 0; i < nel; i++) {
         for (size_t j = i + 1; j < nel; j++) {
-            if (compar(((char*) base + i * width), ((char*) base + j * width)) == 1) {
+            if (compar(((char*) base + i * width), ((char*) base + j * width)) > 0) {
                 SwapStrings(((char*) base + i * width), ((char*) base + j * width), width);
             }
         }
@@ -29,7 +29,7 @@ void QuickSortBasic(void *base, size_t left, size_t right, int (*compar)(const v
     size_t last = left;
 
     for(size_t i = left + 1; i <= right; i++) {
-        if (compar(((char*) base + i * width), ((char*) base + left * width)) == -1) {
+        if (compar(((char*) base + left * width), ((char*) base + i * width)) > 0) {
             SwapStrings(((char*) base + (++last) * width), ((char*) base + i * width), width);
         }
     }

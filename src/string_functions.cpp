@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "string_functions.h"
+#include "define_constants.h"
 
 void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode) {
     if (mode == FORWARD) {
@@ -40,8 +41,7 @@ int CompareStringsForward(const void *str1, const void *str2) {
         SkipNonAlphaSymbols(&j, s2, FORWARD);
     }
 
-    return (tolower(s1->begin[i]) > tolower(s2->begin[j]))  ? 1 :
-           (tolower(s1->begin[i]) == tolower(s2->begin[j])) ? 0 : -1;
+    return tolower(s1->begin[i]) - tolower(s2->begin[j]);
 }
 
 int CompareStringsBackward(const void *str1, const void *str2) {
@@ -66,8 +66,7 @@ int CompareStringsBackward(const void *str1, const void *str2) {
         SkipNonAlphaSymbols(&j, s2, BACKWARD);
     }
 
-    return (tolower(s1->begin[i]) > tolower(s2->begin[j]))  ? 1 :
-           (tolower(s1->begin[i]) == tolower(s2->begin[j])) ? 0 : -1;
+    return tolower(s1->begin[i]) - tolower(s2->begin[j]);
 }
 
 void SwapStrings(void* s1, void* s2, size_t width) {
