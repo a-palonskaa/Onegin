@@ -25,17 +25,15 @@ typedef enum {
     EMPTY_FILE_ERROR        = 4
 } error_t;
 
-ssize_t CountTextSymbolsTest(FILE* input_file);
 ssize_t CountTextSymbols(FILE* input_file);
+ssize_t FindFileSize(FILE* input_file);
 size_t CountTextLines(text_t* text);
 
 void GetTextSymbols(text_t* text, FILE* input_file);
-void IndexStrings(text_t* text);
+void ParseText(text_t* text);
 
 error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
-
-// BIOS
 
 #endif /* TEXT_T_LIB_H */
 

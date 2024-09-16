@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#define STATICS_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]
+
 typedef enum {
     BUBBLE_SORT = 0,
     QUICK_SORT  = 1

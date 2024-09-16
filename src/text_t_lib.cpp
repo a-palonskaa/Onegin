@@ -2,13 +2,10 @@
 #include <sys/stat.h>
 #include <string.h>
 
+#include "logger.h"
 #include "text_t_lib.h"
 
-const int CALLOCED_ARRAYS_CNT = 4;
-
-static void ArraysDtor(text_t* text, unsigned int calloc_cnt);
-
-ssize_t CountTextSymbols(FILE* input_file) {
+ssize_t FindFileSize(FILE* input_file) {
     assert(input_file != nullptr);
 
     struct stat file_data = {};
@@ -19,19 +16,29 @@ ssize_t CountTextSymbols(FILE* input_file) {
     }
 
     if (file_data.st_size == 0) {
-        perror("EMPTY FILE\n");
-        return 0;
+        Log(WARNING, "EMPTY FILE");
     }
 
     return (ssize_t) file_data.st_size;
 }
 
-ssize_t CountTextSymbolsTest(FILE* input_file) {
+ssize_t CountTextSymbols(FILE* input_file) {
     assert(input_file != nullptr);
 
-    fseek(input_file, 0, SEEK_END);
+    if (fseek(input_file, 0, SEEK_END)) {
+        perror("FAILED TO MOVE POINTER IN THE FILE\n");
+        return -1;
+    }
+
     ssize_t size = (ssize_t) ftell(input_file);
-    fseek(input_file, 0, SEEK_SET);
+    if (size == -1) {
+        perror("POINTER POSITION IN THE FILE INDICATION ERROR\n");
+    }
+
+    if (fseek(input_file, 0, SEEK_SET)) {
+        perror("FAILED TO MOVE POINTER IN THE FILE\n");
+        return -1;
+    }
 
     return (ssize_t) size;
 }
@@ -41,25 +48,24 @@ ssize_t CountTextSymbolsTest(FILE* input_file) {
 size_t CountTextLines(text_t* text) {
     assert(text != nullptr);
 
-    size_t last_enter_symbol = 0;
+    size_t last_newline_index = 0;
     size_t lines_cnt = 0;
-    size_t i = 0;
 
-    for (; i < text->symbols_amount; i++) {
+    for (size_t i = 0; i < text->symbols_amount; i++) {
         if (text->symbols[i] == '\n') {
             lines_cnt++;
-            last_enter_symbol  = i;
+            last_newline_index = i;
         }
     }
 
-    if (text->symbols_amount - last_enter_symbol > 2) {
+    if (text->symbols_amount - last_newline_index > 1) {
         lines_cnt++;
     }
 
     return lines_cnt;
 }
 
-void IndexStrings(text_t* text) {
+void ParseText(text_t* text) {
     assert(text != nullptr);
 
     size_t j = 0;
@@ -103,13 +109,10 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     assert(text != nullptr);
 
     unsigned int calloc_cnt = 0;
-    ssize_t symbols_amount = CountTextSymbols(input_file);
+    ssize_t symbols_amount = FindFileSize(input_file);
 
     if (symbols_amount == -1) {
         return FILE_READ_ERROR;
-    }
-    else if (symbols_amount == 0) {
-        return EMPTY_FILE_ERROR;
     }
 
     symbols_amount++;
@@ -117,7 +120,6 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     text->symbols_amount = (size_t) symbols_amount;
 
     text->symbols = (char*) calloc(text->symbols_amount, sizeof(char));
-
     if (text->symbols == nullptr) {
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
@@ -128,13 +130,13 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     if ((fread(text->symbols, sizeof(char), text->symbols_amount, input_file) != text->symbols_amount) &&
          !feof(input_file) &&
          ferror(input_file)) {
-        free(text->symbols);
-        text->symbols = nullptr;
+        perror("FILE READ ERROR\n");
+        StringDtor(text);
         return FILE_READ_ERROR;
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
-        ArraysDtor(text, calloc_cnt);
+        StringDtor(text);
         perror("FAILED TO MOVE POINTER IN THE FILE\n");
         return INFILE_PTR_MOVING_ERROR;
     }
@@ -144,9 +146,8 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     text->strings_amount = CountTextLines(text);
 
     text->nonsorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-
     if (text->nonsorted_strings == nullptr) {
-        ArraysDtor(text, calloc_cnt);
+        StringDtor(text);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
@@ -154,9 +155,8 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     calloc_cnt++;
 
     text->forward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-
     if (text->forward_sorted_strings == nullptr) {
-        ArraysDtor(text, calloc_cnt);
+        StringDtor(text);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
@@ -164,23 +164,32 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     calloc_cnt++;
 
     text->backward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-
     if (text->backward_sorted_strings == nullptr) {
-        ArraysDtor(text, calloc_cnt);
+        StringDtor(text);
         perror("FAILED TO ALLOCATE THE MEMORY\n");
         return MEMORY_ALLOCATE_ERROR;
     }
 
     calloc_cnt++;
 
-    IndexStrings(text);
+    ParseText(text);
     return NO_ERRORS;
 }
 
 void StringDtor(text_t* text) {
     assert(text != nullptr);
 
-    ArraysDtor(text, CALLOCED_ARRAYS_CNT); //ХУЙНЯ - name, logic?
+    free(text->backward_sorted_strings);
+    text->backward_sorted_strings = nullptr;
+
+    free(text->forward_sorted_strings);
+    text->forward_sorted_strings = nullptr;
+
+    free(text->nonsorted_strings);
+    text->nonsorted_strings = nullptr;
+
+    free(text->symbols);
+    text->symbols = nullptr;
 
     text->strings_amount = 0;
     text->symbols_amount = 0;
@@ -190,7 +199,6 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     assert(text != nullptr);
     assert(input_file != nullptr);
 
-
     int c = 0;
 
     for (size_t i = 0; i < text->symbols_amount && ((c = fgetc(input_file)) != EOF); i++) {
@@ -198,27 +206,4 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     }
 
     text->symbols[text->symbols_amount - 1] = '\0';
-}
-
-static void ArraysDtor(text_t* text, unsigned int calloc_cnt) {
-    switch (calloc_cnt) {
-        case 4:
-            free(text->backward_sorted_strings);
-            text->backward_sorted_strings = nullptr;
-            [[fallthrough]];
-        case 3:
-            free(text->forward_sorted_strings);
-            text->forward_sorted_strings = nullptr;
-            [[fallthrough]];
-        case 2:
-            free(text->nonsorted_strings);
-            text->nonsorted_strings = nullptr;
-            [[fallthrough]];
-        case 1:
-            free(text->symbols);
-            text->symbols = nullptr;
-            break;
-        default:
-            break;
-    }
 }

@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "print_results.h"
-#include "sort.h"
-#include "text_t_lib.h"
-#include "string_functions.h"
+//SECTION - в алфавином порядке
 #include "arg_parser.h"
 #include "define_constants.h"
+#include "print_results.h"
+#include "sort.h"
+#include "string_functions.h"
+#include "text_t_lib.h"
+#include "logger.h"
 
-int main(int argc, const char *argv[]) {
+int main(int argc, const char* argv[]) {
     flags_t flags = {};
     InitiallizeFlags(&flags);
 
@@ -18,19 +19,18 @@ int main(int argc, const char *argv[]) {
     }
 
     FILE* input_file  = fopen(flags.input_file_name, "r");
-
     if (input_file == nullptr) {
         perror("FAILED TO OPEN INPUT FILE\n");
         return EXIT_FAILURE;
     }
 
     FILE* output_file = fopen(flags.output_file_name, "w");
-
     if (output_file == nullptr) {
         perror("FAILED TO OPEN OUTPUT FILE\n");
         return EXIT_FAILURE;
     }
-
+    LoggerSetFile(stdout);
+    LoggerSetLevel(DEBUG);
     text_t text = {};
 
     if (StringCtor(&text, input_file) != NO_ERRORS) {
@@ -38,7 +38,7 @@ int main(int argc, const char *argv[]) {
     }
 
     if (flags.sort_type == QUICK_SORT) {
-        printf("Sort text with  quick sort.\n");
+        printf("Sort text with quick sort.\n");
 
         QuickSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
         QuickSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
