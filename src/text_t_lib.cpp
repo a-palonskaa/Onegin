@@ -71,37 +71,41 @@ void ParseText(text_t* text) {
     size_t j = 0;
     const size_t str_cnt = text->strings_amount;
     const size_t smb_cnt = text->symbols_amount;
-//ХУЙНЯ - или через memcpy эти массивчики перекопировать?? //функция копирования структуры
-    text->nonsorted_strings[j].begin = text->symbols;
-    text->backward_sorted_strings[j].begin = text->symbols;
-    text->forward_sorted_strings[j].begin  = text->symbols;
+    string_t* string = nullptr;
 
+    if (text->sort_state == DEFAULT) {
+        string = text->strings.non_sorted;
+    }
+    else {
+        string = text->strings.sorted[0];
+    }
+
+    string[j].begin = text->symbols;
     j++;
 
     for (size_t i = 0; i < smb_cnt && j < str_cnt; i++) {
         if (text->symbols[i] == '\n') {
-            text->nonsorted_strings[j].begin = &text->symbols[i+1];
-            text->backward_sorted_strings[j].begin = text->nonsorted_strings[j].begin;
-            text->forward_sorted_strings[j].begin  = text->nonsorted_strings[j].begin;
-
-            text->nonsorted_strings[j - 1].length = (size_t) (text->nonsorted_strings[j].begin -
-                                                              text->nonsorted_strings[j - 1].begin);
-            text->backward_sorted_strings[j - 1].length = text->nonsorted_strings[j - 1].length;
-            text->forward_sorted_strings[j - 1].length  = text->nonsorted_strings[j - 1].length;
-
+            string[j].begin = &text->symbols[i+1];
+            string[j - 1].length = (size_t) (string[j].begin - string[j - 1].begin);
             text->symbols[i] = '\0';
             j++;
         }
     }
+    // if (text->symbols[smb_cnt - 2] == '\n') {
+    //     printf("meow\n");
+    //     text->symbols[smb_cnt - 2] = '\0';
+    // }
 
-    if (text->symbols[smb_cnt - 2] == '\n') {
-        text->symbols[smb_cnt - 2] = '\0';
+    string[str_cnt - 1].length = (size_t) (&text->symbols[smb_cnt - 1] -
+                                            string[str_cnt - 1].begin);
+
+    if (text->sort_state == DEFAULT) {
+        return;
     }
 
-    text->nonsorted_strings[str_cnt - 1].length = (size_t) (&text->symbols[smb_cnt - 1] -
-                                                            text->nonsorted_strings[str_cnt - 1].begin);
-    text->backward_sorted_strings[str_cnt - 1].length = text->nonsorted_strings[str_cnt - 1].length;
-    text->forward_sorted_strings[str_cnt - 1].length  = text->nonsorted_strings[str_cnt - 1].length;
+    for (size_t i = 1; i < SORT_TYPES_CNT; i++) {
+        CopyStrings(string, text->strings.sorted[i], str_cnt);
+    }
 }
 
 error_t StringCtor(text_t* text, FILE* input_file) {
@@ -125,8 +129,6 @@ error_t StringCtor(text_t* text, FILE* input_file) {
         return MEMORY_ALLOCATE_ERROR;
     }
 
-    calloc_cnt++;
-
     if ((fread(text->symbols, sizeof(char), text->symbols_amount, input_file) != text->symbols_amount) &&
          !feof(input_file) &&
          ferror(input_file)) {
@@ -141,36 +143,37 @@ error_t StringCtor(text_t* text, FILE* input_file) {
         return INFILE_PTR_MOVING_ERROR;
     }
 
-    calloc_cnt++;
-
     text->strings_amount = CountTextLines(text);
+    if (text->sort_state == DEFAULT) {
+        text->strings.non_sorted = (string_t*) calloc(text->strings_amount, sizeof(string_t));
 
-    text->nonsorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-    if (text->nonsorted_strings == nullptr) {
-        StringDtor(text);
-        perror("FAILED TO ALLOCATE THE MEMORY\n");
-        return MEMORY_ALLOCATE_ERROR;
+        if (text->strings.non_sorted == nullptr) {
+            StringDtor(text);
+            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            return MEMORY_ALLOCATE_ERROR;
+        }
     }
+    else {
+        text->strings.sorted = (string_t**) calloc(SORT_TYPES_CNT, sizeof(string_t*));
 
-    calloc_cnt++;
+        if (text->strings.sorted == nullptr) {
+            StringDtor(text);
+            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            return MEMORY_ALLOCATE_ERROR;
+        }
 
-    text->forward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-    if (text->forward_sorted_strings == nullptr) {
-        StringDtor(text);
-        perror("FAILED TO ALLOCATE THE MEMORY\n");
-        return MEMORY_ALLOCATE_ERROR;
+        size_t i = 0;
+
+        for(;i < SORT_TYPES_CNT; i++) {
+            text->strings.sorted[i] = (string_t*) calloc(text->strings_amount, sizeof(string_t));
+
+            if (text->strings.sorted[i] == nullptr) {
+            StringDtor(text);
+            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            return MEMORY_ALLOCATE_ERROR;
+        }
+        }
     }
-
-    calloc_cnt++;
-
-    text->backward_sorted_strings = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-    if (text->backward_sorted_strings == nullptr) {
-        StringDtor(text);
-        perror("FAILED TO ALLOCATE THE MEMORY\n");
-        return MEMORY_ALLOCATE_ERROR;
-    }
-
-    calloc_cnt++;
 
     ParseText(text);
     return NO_ERRORS;
@@ -179,14 +182,16 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 void StringDtor(text_t* text) {
     assert(text != nullptr);
 
-    free(text->backward_sorted_strings);
-    text->backward_sorted_strings = nullptr;
-
-    free(text->forward_sorted_strings);
-    text->forward_sorted_strings = nullptr;
-
-    free(text->nonsorted_strings);
-    text->nonsorted_strings = nullptr;
+    if (text->sort_state == DEFAULT) {
+        free(text->strings.non_sorted);
+        text->strings.non_sorted = nullptr;
+    }
+    else {
+        for (size_t i = 0; i < SORT_TYPES_CNT; i++) {
+            free(text->strings.sorted[i]);
+            text->strings.sorted[i] = nullptr;
+        }
+    }
 
     free(text->symbols);
     text->symbols = nullptr;
@@ -206,4 +211,11 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     }
 
     text->symbols[text->symbols_amount - 1] = '\0';
+}
+
+void CopyStrings(string_t* src, string_t* dst, size_t str_cnt) {
+    size_t size_of_string_t = sizeof(string_t);
+    for (size_t i = 0; i < str_cnt; i++) {
+        memcpy(&dst[i], &src[i],  size_of_string_t);
+    }
 }

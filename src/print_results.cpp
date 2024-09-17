@@ -12,15 +12,15 @@ void PrintTextTestMode(FILE* output_file, text_t* text, sort_mode_t mode) {
     switch (mode) {
         case BACKWARD:
             fprintf(output_file, "\n\nBackward sorting:\n");
-            sorted_strings  = text->backward_sorted_strings;
+            sorted_strings  = text->strings.sorted[1];
             break;
         case FORWARD:
             fprintf(output_file, "\n\nForward sorting:\n");
-            sorted_strings  = text->forward_sorted_strings;
+            sorted_strings  = text->strings.sorted[2];
             break;
         case NO_SORT:
             fprintf(output_file, "\n\nInitial text:\n");
-            sorted_strings  = text->nonsorted_strings;
+            sorted_strings  = text->strings.sorted[0];
             break;
         default:
             return;
@@ -28,14 +28,20 @@ void PrintTextTestMode(FILE* output_file, text_t* text, sort_mode_t mode) {
 
     for (size_t i = 0; i < text->strings_amount; i++) {
         fputs(sorted_strings[i].begin, output_file);
-        fprintf(output_file, "\n");
+
+        if (*(sorted_strings[i].begin) != '\0') {
+            fprintf(output_file, "\n");
+        }
     }
 }
 
 void PrintSortedText(FILE* output_file, text_t* text, flags_t* flags) {
-    if (flags->sort_mode_cnt == 0) {
-        for (size_t i = 0; i < flags->sort_mode_cnt_default; i++) {
-            PrintTextTestMode(output_file, text, flags->sort_mode_default[i]);
+    if (text->sort_state == DEFAULT) {
+        for (size_t i = 0; i < text->strings_amount; i++) { //ХУЙНЯ -
+            fputs(text->strings.non_sorted[i].begin, output_file);
+            if (*(text->strings.non_sorted[i].begin) != '\0') {
+                fprintf(output_file, "\n");
+            }
         }
         return;
     }

@@ -3,19 +3,9 @@
 
 #include <stdio.h>
 
-typedef struct {
-    char* begin;
-    size_t length;
-} string_t;
+#include "define_constants.h"
 
-typedef struct {
-    size_t symbols_amount;
-    size_t strings_amount;
-    string_t* nonsorted_strings;
-    string_t* forward_sorted_strings;
-    string_t* backward_sorted_strings;
-    char* symbols;
-} text_t;
+const size_t SORT_TYPES_CNT = 3;
 
 typedef enum {
     NO_ERRORS               = 0,
@@ -34,6 +24,6 @@ void ParseText(text_t* text);
 
 error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
-
+void CopyStrings(string_t* src, string_t* dst, size_t str_cnt);
 #endif /* TEXT_T_LIB_H */
 

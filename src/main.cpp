@@ -11,6 +11,9 @@
 #include "logger.h"
 
 int main(int argc, const char* argv[]) {
+    LoggerSetFile(stdout);
+    LoggerSetLevel(DEBUG);
+
     flags_t flags = {};
     InitiallizeFlags(&flags);
 
@@ -29,34 +32,39 @@ int main(int argc, const char* argv[]) {
         perror("FAILED TO OPEN OUTPUT FILE\n");
         return EXIT_FAILURE;
     }
-    LoggerSetFile(stdout);
-    LoggerSetLevel(DEBUG);
+
     text_t text = {};
+
+    if (flags.sort_mode_cnt) {
+        text.sort_state = COMPLEX;
+    }
+    else {
+        text.sort_state = DEFAULT;
+    }
 
     if (StringCtor(&text, input_file) != NO_ERRORS) {
         return EXIT_FAILURE;
     }
 
-    if (flags.sort_type == QUICK_SORT) {
-        printf("Sort text with quick sort.\n");
-
-        QuickSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
-        QuickSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+    size_t str_cnt = text.strings_amount;
+    size_t strint_t_size = sizeof(string_t);
+    if (text.sort_state == COMPLEX) {
+        for (size_t i = 1; i < SORT_TYPES_CNT; i++) {
+            SortText(text.strings.sorted[i], str_cnt, strint_t_size, CompareStringsBackward, flags.sort_type);
+        }
+        PrintSortedText(output_file, &text, &flags);
     }
     else {
-        printf("Sort text with bubble sort.\n");
+        SortText(text.strings.non_sorted, str_cnt, strint_t_size, CompareStringsBackward, flags.sort_type);
+        fprintf(output_file, "\n\nBackward sorting:\n");
+        PrintSortedText(output_file, &text, &flags);
 
-        BubbleSort(text.backward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
-        BubbleSort(text.forward_sorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
+        SortText(text.strings.non_sorted, str_cnt, strint_t_size, CompareStringsForward, flags.sort_type);
+        fprintf(output_file, "\n\nForward sorting:\n");
+        PrintSortedText(output_file, &text, &flags);
+
+        PrintNonSortedText(output_file, &text);
     }
-
-    PrintSortedText(output_file, &text, &flags);
-
-    // BubbleSort(text.nonsorted_strings, text.strings_amount, sizeof(string_t), CompareStringsBackward);
-    // PrintTextTestMode(output_file, &text, NO_SORT);
-    // BubbleSort(text.nonsorted_strings, text.strings_amount, sizeof(string_t), CompareStringsForward);
-    // PrintTextTestMode(output_file, &text, NO_SORT);
-    // PrintNonSortedText(output_file, &text);
 
     StringDtor(&text);
 

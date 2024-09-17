@@ -5,7 +5,7 @@
 #include "sort.h"
 #include "string_functions.h"
 
-void BubbleSort(void* base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
+void BubbleSort(void* base, size_t nel, size_t width, compare_t compar) {
     for (size_t i = 0; i < nel; i++) {
         for (size_t j = i + 1; j < nel; j++) {
             if (compar(((char*) base + i * width), ((char*) base + j * width)) > 0) {
@@ -15,11 +15,11 @@ void BubbleSort(void* base, size_t nel, size_t width, int (*compar)(const void *
     }
 }
 
-void QuickSort(void* base, size_t nel, size_t width, int (*compar)(const void *, const void *)) {
+void QuickSort(void* base, size_t nel, size_t width, compare_t compar) {
     QuickSortBasic(base, width, 0, nel - 1, compar);
 }
 
-void QuickSortBasic(void* base_void, size_t width, size_t left, size_t right, int (*compar)(const void *, const void *)){
+void QuickSortBasic(void* base_void, size_t width, size_t left, size_t right, compare_t compar){
     assert(base_void != nullptr);
 
     if (left >= right) {
@@ -42,4 +42,17 @@ void QuickSortBasic(void* base_void, size_t width, size_t left, size_t right, in
 
     QuickSortBasic(base, width, left, last, compar);
     QuickSortBasic(base, width, last + 1, right, compar);
+}
+
+void SortText(void* base, size_t nel, size_t width, compare_t compar, sort_type_t sort_type) {
+    switch (sort_type) {
+        case QUICK_SORT:
+            QuickSort(base, nel, width, compar);
+            break;
+        case BUBBLE_SORT:
+            BubbleSort(base, nel, width, compar);
+            break;
+        default:
+            break;
+    }
 }

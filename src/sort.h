@@ -3,9 +3,13 @@
 
 #include <stdio.h>
 
-void BubbleSort(void* base, size_t nel, size_t width, int (*compar)(const void *, const void *));
-void QuickSort(void* base, size_t nel, size_t width, int (*compar)(const void *, const void *));
-void QuickSortBasic(void* base, size_t width, size_t left, size_t right, int (*compar)(const void *, const void *));
+#include "define_constants.h"
 
+typedef int (*compare_t)(const void *, const void *);
+
+void BubbleSort(void* base, size_t nel, size_t width, compare_t compar);
+void QuickSort(void* base, size_t nel, size_t width, compare_t compar);
+void QuickSortBasic(void* base, size_t width, size_t left, size_t right, compare_t compar);
+void SortText(void* base, size_t nel, size_t width, compare_t compar, sort_type_t sort_type);
 #endif /* SORT_H */
 
