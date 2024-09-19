@@ -1,9 +1,10 @@
-#include <time.h>
 #include <assert.h>
-#include <string.h>
 #include <stdarg.h>
-#include "logger.h"
+#include <string.h>
+#include <time.h>
+
 #include "define_colors.h"
+#include "logger.h"
 
 const size_t MAXLINE = 100;
 
@@ -22,7 +23,7 @@ void LoggerSetLevel(enum LogLevel level) {
     GetLogger()->min_level = level;
 }
 
-void Log(const enum LogLevel status, const char *fmt, ...) {
+void Log(enum LogLevel status, const char *fmt, ...) {
     assert(fmt != nullptr);
 
     if (GetLogger()->min_level > status) {
@@ -32,7 +33,7 @@ void Log(const enum LogLevel status, const char *fmt, ...) {
     char dst[MAXLINE] = "";
     AestheticizeString(fmt, dst, MAXLINE);
 
-    va_list args;
+    va_list args; //TODO va_list args = {};
     va_start (args, fmt);
 
     bool color = GetLogger()->file_out == stdout;
@@ -55,7 +56,7 @@ void Log(const enum LogLevel status, const char *fmt, ...) {
         return str;                       \
     } while(0)
 
-const char* LogMessageTypePrint(const enum LogLevel level, const bool color) {
+const char* LogMessageTypePrint(enum LogLevel level, bool color) {
 
     switch (level) {
         case ERROR:
@@ -85,7 +86,7 @@ void TimePrint(FILE *out) {
             time->tm_hour, time->tm_min,     time->tm_sec);
 }
 
-void AestheticizeString(const char *src, char *dst, const size_t max_len) {
+void AestheticizeString(const char *src, char *dst, size_t max_len) {
     assert(src != nullptr);
     assert(dst != nullptr);
 
@@ -116,3 +117,4 @@ void AestheticizeString(const char *src, char *dst, const size_t max_len) {
         dst[j] = '\0';
     }
 }
+

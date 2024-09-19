@@ -3,7 +3,7 @@
 
 #include "print_results.h"
 
-void PrintTextTestMode(FILE* output_file, text_t* text, sort_mode_t mode) {
+void PrintTextTestMode(FILE* output_file, text_t* text, const sort_mode_t mode) {
     assert(output_file != nullptr);
     assert(text != nullptr);
 

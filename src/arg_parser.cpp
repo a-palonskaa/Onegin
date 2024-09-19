@@ -153,14 +153,14 @@ cmd_error_t ValidateInput(const flags_t* flags) {
 void InitiallizeFlags(flags_t* flags) {
     assert(flags != nullptr);
 
-    flags->sort_type        = QUICK_SORT ;
+    flags->sort_type = QUICK_SORT;
 
     flags->output_file_name = ONEGIN_ORIGINAL;
     flags->input_file_name = ONEGIN_SORTED;
 
     flags->sort_mode_cnt_default = DEFAULT_SORT_AMOUNT;
 
-    STATICS_ASSERT(DEFAULT_SORT_AMOUNT == 3, Default_sorts_amount_should_be_3);
+    STATIC_ASSERT(DEFAULT_SORT_AMOUNT == 3, Default_sorts_amount_should_be_3);
     flags->sort_mode_default[0] = FORWARD;
     flags->sort_mode_default[1] = BACKWARD;
     flags->sort_mode_default[2] = NO_SORT;

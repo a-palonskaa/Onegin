@@ -6,8 +6,7 @@
 #include "text_t_lib.h"
 #include "define_constants.h"
 
-void SkipNonAlphaSymbols(size_t* i, const string_t* str, sort_mode_t mode);
-void SwapStrings(void* s1, void* s2, size_t width);
+void SkipNonAlphaSymbols(const string_t* str, size_t* i, sort_mode_t mode);
 
 int CompareStringsForward(const void* str1, const void* str2);
 int CompareStringsBackward(const void* str1, const void* str2);

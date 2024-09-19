@@ -2,8 +2,18 @@
 #define DEFINE_CONSTANTS_H
 
 #include <stdio.h>
+#include <cerrno>
+#include <cstring>
 
-#define STATICS_ASSERT(COND,MSG) typedef char static_assertion_##MSG[(COND)?1:-1]
+#define STRERROR(ERRNO) ": %s", strerror(errno)
+
+#define STATIC_ASSERT(COND,MSG)                           \
+    do                                                    \
+    {                                                     \
+        typedef char static_assertion_##MSG[(COND)?1:-1]; \
+        static_assertion_##MSG x_ = {};                   \
+        (void) x_;                                        \
+    } while (0)
 
 typedef enum {
     BUBBLE_SORT = 0,
@@ -50,16 +60,16 @@ typedef enum {
     COMPLEX = 1
 } sort_state_t;
 
-typedef union {
-    string_t** sorted;
-    string_t* non_sorted;
-} cat_t;
-
 typedef struct {
     size_t symbols_amount;
     size_t strings_amount;
-    cat_t strings;
+
     char* symbols;
+    union {
+        string_t* non_sorted;
+        string_t** sorted;
+    } strings;
+
     sort_state_t sort_state;
 } text_t;
 

@@ -11,14 +11,15 @@ ssize_t FindFileSize(FILE* input_file) {
     struct stat file_data = {};
 
     if (fstat(fileno(input_file), &file_data) == -1) {
-        perror("FAILED TO READ THE FILE\n");
+        Log(ERROR, "FAILED TO READ THE FILE\n", STRERROR(errno));
         return -1;
     }
 
     if (file_data.st_size == 0) {
-        Log(WARNING, "EMPTY FILE");
+        Log(WARNING, "EMPTY FILE\n", STRERROR(errno));
     }
 
+    Log(INFO, "FILE SIZE: %zu\n", file_data.st_size);
     return (ssize_t) file_data.st_size;
 }
 
@@ -26,20 +27,21 @@ ssize_t CountTextSymbols(FILE* input_file) {
     assert(input_file != nullptr);
 
     if (fseek(input_file, 0, SEEK_END)) {
-        perror("FAILED TO MOVE POINTER IN THE FILE\n");
+        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
         return -1;
     }
 
     ssize_t size = (ssize_t) ftell(input_file);
     if (size == -1) {
-        perror("POINTER POSITION IN THE FILE INDICATION ERROR\n");
+        Log(WARNING, "POINTER POSITION IN THE FILE INDICATION ERROR\n", STRERROR(errno));
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
-        perror("FAILED TO MOVE POINTER IN THE FILE\n");
+        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
         return -1;
     }
 
+    Log(INFO, "FILE SIZE: %zu\n",  size);
     return (ssize_t) size;
 }
 
@@ -62,6 +64,7 @@ size_t CountTextLines(text_t* text) {
         lines_cnt++;
     }
 
+    Log(INFO, "LINES AMOUNT: %zu\n", lines_cnt);
     return lines_cnt;
 }
 
@@ -91,28 +94,26 @@ void ParseText(text_t* text) {
             j++;
         }
     }
-    // if (text->symbols[smb_cnt - 2] == '\n') {
-    //     printf("meow\n");
-    //     text->symbols[smb_cnt - 2] = '\0';
-    // }
 
     string[str_cnt - 1].length = (size_t) (&text->symbols[smb_cnt - 1] -
                                             string[str_cnt - 1].begin);
 
     if (text->sort_state == DEFAULT) {
+        Log(INFO, "TEXT WAS SUCCESSFULLY PARSED\n");
         return;
     }
 
     for (size_t i = 1; i < SORT_TYPES_CNT; i++) {
         CopyStrings(string, text->strings.sorted[i], str_cnt);
     }
+
+    Log(INFO, "TEXT WAS SUCCESSFULLY PARSED\n");
 }
 
 error_t StringCtor(text_t* text, FILE* input_file) {
     assert(input_file != nullptr);
     assert(text != nullptr);
 
-    unsigned int calloc_cnt = 0;
     ssize_t symbols_amount = FindFileSize(input_file);
 
     if (symbols_amount == -1) {
@@ -125,21 +126,21 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
     text->symbols = (char*) calloc(text->symbols_amount, sizeof(char));
     if (text->symbols == nullptr) {
-        perror("FAILED TO ALLOCATE THE MEMORY\n");
+        Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
         return MEMORY_ALLOCATE_ERROR;
     }
 
     if ((fread(text->symbols, sizeof(char), text->symbols_amount, input_file) != text->symbols_amount) &&
          !feof(input_file) &&
          ferror(input_file)) {
-        perror("FILE READ ERROR\n");
+        Log(ERROR, "FILE READ ERROR\n", STRERROR(errno));
         StringDtor(text);
         return FILE_READ_ERROR;
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
         StringDtor(text);
-        perror("FAILED TO MOVE POINTER IN THE FILE\n");
+        Log(ERROR, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
         return INFILE_PTR_MOVING_ERROR;
     }
 
@@ -149,7 +150,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
         if (text->strings.non_sorted == nullptr) {
             StringDtor(text);
-            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
     }
@@ -158,7 +159,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
         if (text->strings.sorted == nullptr) {
             StringDtor(text);
-            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
 
@@ -169,13 +170,14 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
             if (text->strings.sorted[i] == nullptr) {
             StringDtor(text);
-            perror("FAILED TO ALLOCATE THE MEMORY\n");
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
         }
     }
 
     ParseText(text);
+    Log(INFO, "TEXT STRUCTURE WAS SUCCESSFULLY CREATED AND INITIALIZED\n");
     return NO_ERRORS;
 }
 
@@ -198,6 +200,7 @@ void StringDtor(text_t* text) {
 
     text->strings_amount = 0;
     text->symbols_amount = 0;
+    Log(INFO, "TEXT STRUCTURE WAS SUCCESSFULLY DESTRUCTED\n");
 }
 
 void GetTextSymbols(text_t* text, FILE* input_file) {
@@ -211,6 +214,7 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     }
 
     text->symbols[text->symbols_amount - 1] = '\0';
+    Log(INFO, "TEXT WAS SUCCESSFULLY READ\n");
 }
 
 void CopyStrings(string_t* src, string_t* dst, size_t str_cnt) {

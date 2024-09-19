@@ -16,7 +16,7 @@ LDFLAGS =
 SOURCE_DIR  = src
 BUILD_DIR   = build
 
-SOURCES = main.cpp string_functions.cpp print_results.cpp sort.cpp text_t_lib.cpp arg_parser.cpp logger.cpp
+SOURCES = main.cpp sort_and_print.cpp string_functions.cpp print_results.cpp sort.cpp text_t_lib.cpp arg_parser.cpp logger.cpp includes_sort.cpp
 SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
 
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
@@ -37,4 +37,3 @@ $(OBJECTS): $(BUILD_DIR)/%.o: %.cpp
 .PHONY: clean #псевдоцель(не привязана к файлуб таргет который не файл)
 clean:
 	rm -f $(EXECUTABLE) $(OBJECTS)
-

@@ -1,29 +1,18 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "arg_parser.h"
 #include "define_constants.h"
 #include "logger.h"
-#include "print_results.h"
-#include "sort.h"
-#include "sort_and_print.h"
-#include "string_functions.h"
+#include <string.h>
 #include "text_t_lib.h"
-//ХУЙНЯ - добавить файл для логера и в аргументы командной строки чтобиожно было записфвать имя файла
-// ХУЙНЯ: add const in all definitions but no decls
-const char* LOGGER_OUTPUT = "./output/info";
+
+#include "print_results.h"
+#include <stdio.h>
+#include "sort.h"
+#include <stdlib.h>
+#include "string_functions.h"
 
 int main(int argc, const char* argv[]) {
-    FILE* logger_output_file = fopen(LOGGER_OUTPUT, "w");
-
-    if (logger_output_file == nullptr) {
-        perror("FAILED TO OPEN LOGGER OUTPUT FILE");
-        logger_output_file = stdout;
-    }
-
+    LoggerSetFile(stdout);
     LoggerSetLevel(DEBUG);
-    LoggerSetFile(logger_output_file);
 
     flags_t flags = {};
     InitiallizeFlags(&flags);
@@ -31,6 +20,8 @@ int main(int argc, const char* argv[]) {
     if (ArgParser(argc, argv, &flags) == INPUT_ERROR) {
         return EXIT_FAILURE;
     }
+
+    #include "string_functions.h"
 
     FILE* input_file  = fopen(flags.input_file_name, "r");
     if (input_file == nullptr) {
@@ -57,17 +48,34 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // ХУЙНЯ: add func
-    SortAndPrintText(&text, &flags, output_file);
+    size_t str_cnt = text.strings_amount;
+    size_t strint_t_size = sizeof(string_t);
+    if (text.sort_state == COMPLEX) {
+        for (size_t i = 1; i < SORT_TYPES_CNT; i++) {
+            SortText(text.strings.sorted[i], str_cnt, strint_t_size, CompareStringsBackward, flags.sort_type);
+        }
+        PrintSortedText(output_file, &text, &flags);
+    }
+    else {
+        SortText(text.strings.non_sorted, str_cnt, strint_t_size, CompareStringsBackward, flags.sort_type);
+        fprintf(output_file, "\n\nBackward sorting:\n");
+        PrintSortedText(output_file, &text, &flags);
+
+        SortText(text.strings.non_sorted, str_cnt, strint_t_size, CompareStringsForward, flags.sort_type);
+        fprintf(output_file, "\n\nForward sorting:\n");
+        PrintSortedText(output_file, &text, &flags);
+
+        PrintNonSortedText(output_file, &text);
+    }
 
     StringDtor(&text);
 
-    if (fclose(input_file) == EOF) {
+    if(fclose(input_file) == EOF) {
         Log(ERROR, "FAILED TO CLOSE INPUT FILE\n", STRERROR(errno));
         return EXIT_FAILURE;
     }
 
-    if (fclose(output_file) == EOF) {
+    if(fclose(output_file) == EOF) {
         Log(ERROR, "FAILED TO CLOSE OUTPUT FILE\n", STRERROR(errno));
         return EXIT_FAILURE;
     }
@@ -75,22 +83,3 @@ int main(int argc, const char* argv[]) {
     return EXIT_SUCCESS;
 }
 
-// TODO
-//    /
-//     build/
-//         /...
-//     common/
-//         include/
-//         src/
-//         makefile
-//     onegin/
-//         include/
-//         src/
-//         makefile
-//     header_sort/
-//         include/
-//         src/
-//         makefile
-//     makefile
-
-// TODO: another layout: rle
