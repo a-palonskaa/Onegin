@@ -1,39 +1,41 @@
+BUILD_DIR_EXECUTABLE = build/executable
+EXECUTABLE_ONEGIN = $(BUILD_DIR_EXECUTABLE)/onegin
+EXECUTABLE_HEADER_SORT = $(BUILD_DIR_EXECUTABLE)/header_sort
+
 CC = g++
-CFLAGS = -std=c++17 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-declarations         \
-		 -Wcast-align -Wcast-qual -Wchar-subscripts -Wconversion -Wctor-dtor-privacy     \
-		 -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat=2     \
-		 -Winline -Wnon-virtual-dtor -Woverloaded-virtual -Wpacked -Wpointer-arith       \
-		 -Winit-self -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo           \
-		 -Wstrict-overflow=2 -Wsuggest-override -Wswitch-default -Wswitch-enum -Wundef   \
-		 -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-range 			     \
-		 -Wno-missing-field-initializers -Wno-narrowing -Wno-old-style-cast 			 \
-		 -Wno-varargs -Wstack-protector -Wsuggest-override -Wbounds-attributes-redundant \
-		 -Wlong-long -Wopenmp -fcheck-new -fsized-deallocation -fstack-protector 		 \
-		 -fstrict-overflow -fno-omit-frame-pointer -Wlarger-than=8192 -Wstack-protector  \
-		 -fPIE -Werror=vla -Wimplicit-fallthrough
-LDFLAGS =
+CFLAGS =
+BUILD_DIR = build
+SOURCES_ONEGIN =
+SOURCES_HEADER_SORT =
+OBJECTS_ONEGIN =
+OBJECTS_HEADER_SORT =
+DEPS_ONEGIN =
+DEPS_HEADER_SORT =
 
-SOURCE_DIR  = src
-BUILD_DIR   = build
+-include common/config.mk
 
-SOURCES = main.cpp sort_and_print.cpp string_functions.cpp print_results.cpp sort.cpp text_t_lib.cpp arg_parser.cpp logger.cpp includes_sort.cpp
-SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
+all: onegin
 
-OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
+-include onegin/config.mk
+-include header_sort/config.mk
 
-EXECUTABLE = $(BUILD_DIR)/meow
+onegin: $(EXECUTABLE_ONEGIN)
 
-.PHONY: all
-
-all: $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS)
+$(EXECUTABLE_ONEGIN): $(OBJECTS_ONEGIN)
 	@$(CC) $(LDFLAGS) $^ -o $@
 
-$(OBJECTS): $(BUILD_DIR)/%.o: %.cpp
+$(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY: clean #псевдоцель(не привязана к файлуб таргет который не файл)
+header_sort: $(EXECUTABLE_HEADER_SORT)
+
+$(EXECUTABLE_HEADER_SORT): $(OBJECTS_HEADER_SORT)
+	@$(CC) $(LDFLAGS) $^ -o $@
+
+.PHONY: clean
 clean:
-	rm -f $(EXECUTABLE) $(OBJECTS)
+	@rm -f $(OBJECTS_ONEGIN) $(OBJECTS_HEADER_SORT) $(EXECUTABLE_ONEGIN) $(EXECUTABLE_HEADER_SORT)
+
+echo:
+	@echo $(OBJECTS_ONEGIN)

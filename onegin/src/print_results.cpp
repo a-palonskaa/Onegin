@@ -37,7 +37,7 @@ void PrintTextTestMode(FILE* output_file, text_t* text, const sort_mode_t mode) 
 
 void PrintSortedText(FILE* output_file, text_t* text, flags_t* flags) {
     if (text->sort_state == DEFAULT) {
-        for (size_t i = 0; i < text->strings_amount; i++) { //ХУЙНЯ -
+        for (size_t i = 0; i < text->strings_amount; i++) {
             fputs(text->strings.non_sorted[i].begin, output_file);
             if (*(text->strings.non_sorted[i].begin) != '\0') {
                 fprintf(output_file, "\n");

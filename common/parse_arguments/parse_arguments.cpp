@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "arg_parser.h"
+#include "parse_arguments.h"
 
 static cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg);
 static cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg);

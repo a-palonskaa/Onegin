@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "parse_arguments.h"
 #include "define_constants.h"
 
 typedef int (*compare_t)(const void *, const void *);

@@ -4,7 +4,6 @@
 #include <string.h>
 
 #include "sort.h"
-#include "string_functions.h"
 
 void BubbleSort(void* base, const size_t nel, const size_t width, compare_t compar) {
     for (size_t i = 0; i < nel; i++) {

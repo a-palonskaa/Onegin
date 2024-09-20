@@ -1,15 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-#include "arg_parser.h"
 #include "define_constants.h"
-#include "logger.h"
-#include "print_results.h"
-#include "sort.h"
-#include "sort_and_print.h"
-#include "string_functions.h"
 #include "text_t_lib.h"
+#include "logger.h"
+#include "sort_and_print.h"
+#include "sort.h"
+#include "print_results.h"
+#include "parse_arguments.h"
+#include "string_functions.h"
 //ХУЙНЯ - добавить файл для логера и в аргументы командной строки чтобиожно было записфвать имя файла
 // ХУЙНЯ: add const in all definitions but no decls
 const char* LOGGER_OUTPUT = "./output/info";
@@ -57,7 +57,6 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    // ХУЙНЯ: add func
     SortAndPrintText(&text, &flags, output_file);
 
     StringDtor(&text);

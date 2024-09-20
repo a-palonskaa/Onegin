@@ -6,11 +6,14 @@
 #include "sort.h"
 #include "text_t_lib.h"
 #include "logger.h"
-// КОМПИЛЯЦИЯ: g++ ./src/includes_sort_main.cpp ./src/includes_sort.cpp ./src/sort.cpp ./src/text_t_lib.cpp ./src/logger.cpp -o cat
+
 int main() {
-    FILE* input_file  = fopen("back.cpp", "r");
+    LoggerSetLevel(DEBUG);
+    LoggerSetFile(stdout);
+
+    FILE* input_file = fopen("meow.txt", "r");
     if (input_file == nullptr) {
-        Log(ERROR, "FAILED TO OPEN INPUT FILE\n", STRERROR(errno));
+        Log(ERROR, STRERROR(errno), "FAILED TO OPEN INPUT FILE\n"); //TRASH - logger чет не работает
         return EXIT_FAILURE;
     }
 

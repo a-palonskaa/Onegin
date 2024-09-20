@@ -4,6 +4,25 @@
 #include <stdio.h>
 
 #include "define_constants.h"
+#include "parse_arguments.h"
+
+typedef struct {
+    char* begin;
+    size_t length;
+} string_t;
+
+typedef struct {
+    size_t symbols_amount;
+    size_t strings_amount;
+
+    char* symbols;
+    union {
+        string_t* non_sorted;
+        string_t** sorted;
+    } strings;
+
+    sort_state_t sort_state;
+} text_t;
 
 const size_t SORT_TYPES_CNT = 3;
 
