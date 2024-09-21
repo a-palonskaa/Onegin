@@ -44,5 +44,6 @@ void ParseText(text_t* text);
 error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
 void CopyStrings(string_t* src, string_t* dst, size_t str_cnt);
+
 #endif /* TEXT_T_LIB_H */
 

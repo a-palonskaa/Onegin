@@ -26,12 +26,14 @@ $(EXECUTABLE_ONEGIN): $(OBJECTS_ONEGIN)
 
 $(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -MP -MMD -c $< -o $@
 
 header_sort: $(EXECUTABLE_HEADER_SORT)
 
 $(EXECUTABLE_HEADER_SORT): $(OBJECTS_HEADER_SORT)
 	@$(CC) $(LDFLAGS) $^ -o $@
+
+-include $(DEPS)
 
 .PHONY: clean
 clean:

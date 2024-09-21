@@ -1,7 +1,7 @@
 HEADER_INCLUDE_DIR = header_sort/include
 SOURCE_DIR  = header_sort/src
 
-SOURCES_HEADER = main.cpp includes_sort.cpp
+SOURCES_HEADER = main.cpp includes_sort.cpp print_sorted_includes.cpp
 SOURCES_HEADER_BUILD = $(addprefix $(SOURCE_DIR)/, $(SOURCES_HEADER))
 OBJECTS_HEADER = $(addprefix $(BUILD_DIR)/, $(SOURCES_HEADER_BUILD:%.cpp=%.o))
 

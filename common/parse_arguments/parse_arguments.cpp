@@ -5,6 +5,7 @@
 
 static cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg);
 static cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg);
+static cmd_error_t ChangeFlagLoggerOutput(flags_t* flags, const char* arg);
 
 static cmd_error_t ChangeFlagModeBubbleSort(flags_t* flags, const char* arg);
 static cmd_error_t ChangeFlagModeQuickSort(flags_t* flags, const char* arg);
@@ -17,19 +18,25 @@ static cmd_error_t Help(flags_t* flags, const char* arg);
 static cmd_error_t ValidateInput(const flags_t* flags);
 static void PrintHelp();
 
-const char* ONEGIN_ORIGINAL = "./txtfiles/sorted_onegin_full.txt";
+const char* ONEGIN_ORIGINAL = "./output/onegin/sorted_onegin_full.txt";
 const char* ONEGIN_SORTED = "./txtfiles/onegin_full.txt";
+const char* ONEGIN_LOGGER_OUTPUT = "./output/onegin/info";
+
+const char* HEADER_SORT_LOGGER_OUTPUT = "./output/header_sort/info";
+const char* HEADER_SORT_OUTPUT = "./output/header_sort/sorted_headers.txt";
+const char* HEADER_SORT_INPUT = "./onegin/src/main.cpp";
 
 const option_t COMMANDS[] = {
-    //   short_name      long_name         changeflag function         description               has_arg
-        {"-bs",       "--bubble_sort",   &ChangeFlagModeBubbleSort, "Testing mode"              , false},
-        {"-qs",       "--quick_sort",    &ChangeFlagModeQuickSort,  "Solving mode"              , false},
-        {"-i",        "--input_file",    &ChangeFlagInputFile,      "Read data from the file"   , true},
-        {"-o",        "--output_file",   &ChangeFlagOutputFile,     "Print results in the file ", true},
-        {"-h",        "--help",          &Help,                     "Help"                      , false},
-        {"-b",        "--backward_sort", &ChangeFlagBackwardSort,   "Sort from the end"         , false},
-        {"-f",        "--forward_sort",  &ChangeFlagForwardSort,    "Sort from the begin"       , false},
-        {"-n",        "--no_sort",       &ChangeFlagNoSort,         "No sort"                   , false}
+    //   short_name    long_name         changeflag function         description                      has_arg
+        {"-bs",     "--bubble_sort",   &ChangeFlagModeBubbleSort, "Testing mode"                     , false},
+        {"-qs",     "--quick_sort",    &ChangeFlagModeQuickSort,  "Solving mode"                     , false},
+        {"-i",      "--input_file",    &ChangeFlagInputFile,      "Read data from the file"          , true},
+        {"-o",      "--output_file",   &ChangeFlagOutputFile,     "Print results in the file "       , true},
+        {"-h",      "--help",          &Help,                     "Help"                             , false},
+        {"-b",      "--backward_sort", &ChangeFlagBackwardSort,   "Sort from the end"                , false},
+        {"-f",      "--forward_sort",  &ChangeFlagForwardSort,    "Sort from the begin"              , false},
+        {"-n",      "--no_sort",       &ChangeFlagNoSort,         "No sort"                          , false},
+        {"-l",      "--logger_output", &ChangeFlagLoggerOutput,   "Print logger messages in the file", true},
 };
 
 const size_t COMMANDS_ARRAY_LENGTH = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
@@ -92,6 +99,15 @@ cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
+static cmd_error_t ChangeFlagLoggerOutput(flags_t* flags, const char* arg) {
+    assert(flags != nullptr);
+    (void) arg;
+
+    flags->loger_output_file = arg;
+
+    return NO_CMD_ERRORS;
+}
+
 cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg) {
     assert(flags != nullptr);
     (void) arg;
@@ -150,31 +166,6 @@ cmd_error_t ValidateInput(const flags_t* flags) {
     return NO_CMD_ERRORS;
 }
 
-void InitiallizeFlags(flags_t* flags) {
-    assert(flags != nullptr);
-
-    flags->sort_type = QUICK_SORT;
-
-    flags->output_file_name = ONEGIN_ORIGINAL;
-    flags->input_file_name = ONEGIN_SORTED;
-
-    flags->sort_mode_cnt_default = DEFAULT_SORT_AMOUNT;
-
-    STATIC_ASSERT(DEFAULT_SORT_AMOUNT == 3, Default_sorts_amount_should_be_3);
-    flags->sort_mode_default[0] = FORWARD;
-    flags->sort_mode_default[1] = BACKWARD;
-    flags->sort_mode_default[2] = NO_SORT;
-
-    for (size_t i = 0; i < MAX_SORT_AMOUNT; i++) {
-        flags->sort_mode[i] = NO_SORT;
-    }
-
-    flags->sort_mode_valid = 0;
-    flags->output_valid    = 0;
-    flags->input_valid     = 0;
-    flags->sort_mode_cnt   = 0;
-}
-
 cmd_error_t ChangeFlagBackwardSort(flags_t* flags, const char* arg) {
     assert(flags != nullptr);
     (void) arg;
@@ -209,4 +200,46 @@ static cmd_error_t ChangeFlagNoSort(flags_t* flags, const char* arg) {
 
     flags->sort_mode[flags->sort_mode_cnt++] = NO_SORT;
     return NO_CMD_ERRORS;
+}
+
+void InitiallizeFlagsOnegin(flags_t* flags) {
+    assert(flags != nullptr);
+
+    flags->sort_type = QUICK_SORT;
+
+    flags->output_file_name  = ONEGIN_ORIGINAL;
+    flags->input_file_name   = ONEGIN_SORTED;
+    flags->loger_output_file = ONEGIN_LOGGER_OUTPUT;
+
+    STATIC_ASSERT(DEFAULT_SORT_AMOUNT == 3, Default_sorts_amount_should_be_3);
+    flags->sort_mode_cnt_default = DEFAULT_SORT_AMOUNT;
+
+    flags->sort_mode_default[0] = FORWARD;
+    flags->sort_mode_default[1] = BACKWARD;
+    flags->sort_mode_default[2] = NO_SORT;
+
+    for (size_t i = 0; i < MAX_SORT_AMOUNT; i++) {
+        flags->sort_mode[i] = NO_SORT;
+    }
+
+    InitiallizeValidationFlags(flags);
+}
+
+void InitiallizeFlagsHeaderSort(flags_t* flags) {
+    assert(flags != nullptr);
+
+    flags->sort_type = QUICK_SORT;
+
+    flags->output_file_name  = HEADER_SORT_OUTPUT;
+    flags->input_file_name   = HEADER_SORT_INPUT;
+    flags->loger_output_file = HEADER_SORT_LOGGER_OUTPUT;
+
+    InitiallizeValidationFlags(flags);
+}
+
+void InitiallizeValidationFlags(flags_t* flags) {
+    flags->sort_mode_valid = 0;
+    flags->output_valid    = 0;
+    flags->input_valid     = 0;
+    flags->sort_mode_cnt   = 0;
 }

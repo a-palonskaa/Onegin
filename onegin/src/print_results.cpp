@@ -45,6 +45,7 @@ void PrintSortedText(FILE* output_file, text_t* text, flags_t* flags) {
         }
         return;
     }
+
     for (size_t i = 0; i < flags->sort_mode_cnt; i++) {
         PrintTextTestMode(output_file, text, flags->sort_mode[i]);
     }

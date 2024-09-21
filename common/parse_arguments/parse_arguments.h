@@ -27,6 +27,7 @@ const size_t DEFAULT_SORT_AMOUNT = 3;
 typedef struct {
     const char* input_file_name;
     const char* output_file_name;
+    const char* loger_output_file;
 
     sort_type_t sort_type;
     sort_mode_t sort_mode[MAX_SORT_AMOUNT];
@@ -56,6 +57,9 @@ typedef struct{
 } option_t;
 
 cmd_error_t ArgParser(int argc, const char* argv[], flags_t* flags);
-void InitiallizeFlags(flags_t* flags);
+
+void InitiallizeFlagsOnegin(flags_t* flags);
+void InitiallizeFlagsHeaderSort(flags_t* flags);
+void InitiallizeValidationFlags(flags_t* flags);
 
 #endif /* PARSE_ARGUMENTS_H */

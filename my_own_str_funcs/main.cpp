@@ -1,38 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-#include "my_get_line_v2.h"
+#include "my_str_functions.h"
 
 int main() {
+    char s1[5]= {};
+    char p1[10] = {};
 
-    char* ptr = nullptr;
-    size_t n = 0;
+    s1[0] = 'm';
+    s1[1] = 'e';
+    s1[2] = 'o';
+    s1[3] = 'w';
+    s1[4] = '\n';
 
-    FILE* stream = fopen("text.txt", "r");
+    const char* s2 = "yeah";
 
-    if (stream == nullptr) {
-        Log(ERROR, "FILE OPEN ERROR\n", STRERROR(errno));
-        return EXIT_FAILURE;
-    }
-    time_t t1 = clock();
-    getline(&ptr, &n, stream);
-    printf("%s", ptr);
-    time_t t2 = clock();
-    fseek(stream, 0, SEEK_SET);
+    printf("%s\n%s\n", s1, p1);
 
-    MYGetLineV2(&ptr, &n, stream);
-    printf("%s", ptr);
-
-    time_t t3 = clock();
-    printf("Working time of standart get line = %ld\n", t2 - t1);
-    printf("Working time of MY get line = %ld\n", t3 - t2);
-
-    FREE(ptr);
-
-    if (fclose(stream) == EOF) {
-        Log(ERROR, "FILE OPEN ERROR\n", STRERROR(errno));
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+    printf("%s\n%s\n", s1, p1);
 }

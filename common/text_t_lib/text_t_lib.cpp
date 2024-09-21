@@ -11,12 +11,12 @@ ssize_t FindFileSize(FILE* input_file) {
     struct stat file_data = {};
 
     if (fstat(fileno(input_file), &file_data) == -1) {
-        Log(ERROR, "FAILED TO READ THE FILE\n", STRERROR(errno));
+        Log(ERROR, "FAILED TO READ THE FILE\n" STRERROR(errno));
         return -1;
     }
 
     if (file_data.st_size == 0) {
-        Log(WARNING, "EMPTY FILE\n", STRERROR(errno));
+        Log(WARNING, "EMPTY FILE\n" STRERROR(errno));
     }
 
     Log(INFO, "FILE SIZE: %zu\n", file_data.st_size);
@@ -27,17 +27,17 @@ ssize_t CountTextSymbols(FILE* input_file) {
     assert(input_file != nullptr);
 
     if (fseek(input_file, 0, SEEK_END)) {
-        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
+        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n" STRERROR(errno));
         return -1;
     }
 
     ssize_t size = (ssize_t) ftell(input_file);
     if (size == -1) {
-        Log(WARNING, "POINTER POSITION IN THE FILE INDICATION ERROR\n", STRERROR(errno));
+        Log(WARNING, "POINTER POSITION IN THE FILE INDICATION ERROR\n" STRERROR(errno));
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
-        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
+        Log(WARNING, "FAILED TO MOVE POINTER IN THE FILE\n" STRERROR(errno));
         return -1;
     }
 
@@ -126,21 +126,21 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
     text->symbols = (char*) calloc(text->symbols_amount, sizeof(char));
     if (text->symbols == nullptr) {
-        Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
+        Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
         return MEMORY_ALLOCATE_ERROR;
     }
 
     if ((fread(text->symbols, sizeof(char), text->symbols_amount, input_file) != text->symbols_amount) &&
          !feof(input_file) &&
          ferror(input_file)) {
-        Log(ERROR, "FILE READ ERROR\n", STRERROR(errno));
+        Log(ERROR, "FILE READ ERROR\n" STRERROR(errno));
         StringDtor(text);
         return FILE_READ_ERROR;
     }
 
     if (fseek(input_file, 0, SEEK_SET)) {
         StringDtor(text);
-        Log(ERROR, "FAILED TO MOVE POINTER IN THE FILE\n", STRERROR(errno));
+        Log(ERROR, "FAILED TO MOVE POINTER IN THE FILE\n" STRERROR(errno));
         return INFILE_PTR_MOVING_ERROR;
     }
 
@@ -150,7 +150,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
         if (text->strings.non_sorted == nullptr) {
             StringDtor(text);
-            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
     }
@@ -159,7 +159,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
         if (text->strings.sorted == nullptr) {
             StringDtor(text);
-            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
 
@@ -170,7 +170,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
 
             if (text->strings.sorted[i] == nullptr) {
             StringDtor(text);
-            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n", STRERROR(errno));
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
             return MEMORY_ALLOCATE_ERROR;
         }
         }
