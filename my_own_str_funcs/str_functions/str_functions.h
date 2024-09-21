@@ -1,5 +1,5 @@
-#ifndef MY_STR_FUNCTIONS_H
-#define MY_STR_FUNCTIONS_H
+#ifndef STR_FUNCTIONS_H
+#define STR_FUNCTIONS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,4 +15,4 @@ size_t MyStrlen(const char *s);
 size_t MyStrnlen(const char *s, size_t maxlen);
 int MyPuts(const char *s);
 
-#endif /* MY_STR_FUNCTIONS_H */
+#endif /* STR_FUNCTIONS_H */

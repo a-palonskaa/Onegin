@@ -1,4 +1,4 @@
-#include "my_get_line_v2.h"
+#include "get_line.h"
 
 ssize_t MYGetLineV2(char** lineptr, size_t* n, FILE* stream) {
     static const size_t MAX_STR_SIZE = 5;
@@ -45,5 +45,5 @@ ssize_t MYGetLineV2(char** lineptr, size_t* n, FILE* stream) {
     (*lineptr)[end_str - start_str] = '\0';
     *n = end_str - start_str + 1;
 
-    return end_str - start_str;
+    return (ssize_t) (end_str - start_str);
 }

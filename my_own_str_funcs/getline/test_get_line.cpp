@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "my_get_line_v2.h"
+#include "get_line.h"
 
 int main() {
 
@@ -14,18 +14,21 @@ int main() {
     if (stream == nullptr) {
         return EXIT_FAILURE;
     }
-    time_t t1 = clock();
+
+    clock_t t1 = clock();
     getline(&ptr, &n, stream);
     printf("%s", ptr);
-    time_t t2 = clock();
+    clock_t t2 = clock();
+
     fseek(stream, 0, SEEK_SET);
 
+    clock_t t3 = clock();
     MYGetLineV2(&ptr, &n, stream);
     printf("%s", ptr);
+    clock_t t4 = clock();
 
-    time_t t3 = clock();
     printf("Working time of standart get line = %ld\n", t2 - t1);
-    printf("Working time of MY get line = %ld\n", t3 - t2);
+    printf("Working time of MY get line = %ld\n", t4 - t3);
 
     FREE(ptr);
 

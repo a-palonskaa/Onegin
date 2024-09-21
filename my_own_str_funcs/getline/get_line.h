@@ -1,5 +1,5 @@
-#ifndef MY_GET_LINE_V2_H
-#define MY_GET_LINE_V2_H
+#ifndef GET_LINE_H
+#define GET_LINE_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,4 +11,4 @@
 
 ssize_t MYGetLineV2(char** lineptr, size_t* n, FILE* stream);
 
-#endif /* MY_GET_LINE_V2_H */
+#endif /* GET_LINE_H */

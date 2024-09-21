@@ -35,7 +35,7 @@ void SortIncludes(text_t* text) {
             }
         }
     }
-    Log(INFO, "SUCCESSFULLY SORTED INCLUDES\n"); //TRASH -  RED(str) - появляется таб
+    Log(INFO, "SUCCESSFULLY SORTED INCLUDES\n");
 }
 
 int CompareIncludes(const void* str1, const void* str2) {
