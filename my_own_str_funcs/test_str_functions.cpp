@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "my_str_functions.h"
+#include "str_functions.h"
 
 int main() {
     char s1[5]= {};

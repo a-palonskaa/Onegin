@@ -12,7 +12,7 @@ CFLAGS += -Wall -std=c++17 -Wall -Wextra -Weffc++ -Wc++14-compat -Wmissing-decla
 		 -fstrict-overflow -fno-omit-frame-pointer -Wlarger-than=8192 -Wstack-protector  \
 		 -fPIE -Werror=vla
 LDFLAGS =
-SOURCES_MY_FUNCS = my_str_functions.cpp main.cpp
+SOURCES_MY_FUNCS = test_str_functions.cpp str_functions.cpp
 OBJECTS_MY_FUNCS = $(SOURCES_MY_FUNCS:.cpp=.o)
 EXECUTABLE_MY_FUNCS = mine
 

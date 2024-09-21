@@ -1,4 +1,4 @@
-#include "my_str_functions.h"
+#include "str_functions.h"
 
 char* MyStrdup(const char *s1) {
     size_t length = 0;
@@ -109,6 +109,46 @@ char* MyStrchr(const char* s, int c) {
     if (c != '\0' && s[i] == '\0') {
         return nullptr;
     }
-    return (char*) &s[i];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
+    char* symbol = (char*) &s[i];
+#pragma clang diagnostic pop
+    return symbol;
 };
+
+
+size_t MyStrlen(const char *s) {
+    size_t i = 0;
+
+    while (s[i++] != '\0') {
+        ;
+    }
+    return i - 1;
+}
+
+size_t MyStrnlen(const char *s, size_t maxlen) {
+    size_t i = 0;
+
+    while ((s[i++] != '\0') && (i < maxlen)) {
+        ;
+    }
+
+    return i - 1;
+}
+
+int MyPuts(const char *s) {
+    int i = 0;
+
+    while (s[i] != '\0') {
+        if (putchar(s[i++]) == EOF) {
+            return EOF;
+        }
+    }
+
+    if (putchar('\n') == EOF) {
+        return EOF;
+    }
+
+    return i;
+}
 
