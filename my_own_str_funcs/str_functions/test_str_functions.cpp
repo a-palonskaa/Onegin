@@ -8,14 +8,14 @@ int main() {
     char p1[10] = {};
 
     s1[0] = 'm';
-    s1[1] = 'e';
-    s1[2] = 'o';
-    s1[3] = 'w';
+    s1[1] = 'a';
+    s1[2] = 'k';
+    s1[3] = 'e';
     s1[4] = '\n';
 
-    const char* s2 = "yeah";
+    const char* s2 = "hello world";
 
     printf("%s\n%s\n", s1, p1);
-
+    printf("\n%d\n", MyStrlen(nullptr));
     printf("%s\n%s\n", s1, p1);
 }

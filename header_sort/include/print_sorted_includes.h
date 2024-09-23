@@ -1,6 +1,7 @@
 #ifndef PRINT_SORTED_INCLUDES_H
 #define PRINT_SORTED_INCLUDES_H
 
+#include <assert.h>
 #include <stdio.h>
 
 #include "text_t_lib.h"

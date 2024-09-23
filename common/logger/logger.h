@@ -21,10 +21,4 @@ void LoggerSetFile(FILE* out);
 
 void LoggerSetLevel(enum LogLevel level);
 
-const char* LogMessageTypePrint(enum LogLevel level, bool color);
-
-void TimePrint(FILE *out);
-
-void AestheticizeString(const char *src, char *dst, size_t max_len);
-
 #endif /* LOGGER_H */

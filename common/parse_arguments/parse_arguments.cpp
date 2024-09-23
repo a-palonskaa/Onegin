@@ -18,13 +18,13 @@ static cmd_error_t Help(flags_t* flags, const char* arg);
 static cmd_error_t ValidateInput(const flags_t* flags);
 static void PrintHelp();
 
-const char* ONEGIN_ORIGINAL = "./output/onegin/sorted_onegin_full.txt";
-const char* ONEGIN_SORTED = "./txtfiles/onegin_full.txt";
-const char* ONEGIN_LOGGER_OUTPUT = "./output/onegin/info";
+const char* ONEGIN_ORIGINAL = "output/onegin/sorted_onegin_full.txt";
+const char* ONEGIN_SORTED = "txtfiles/onegin_full.txt";
+const char* ONEGIN_LOGGER_OUTPUT = "output/onegin/info";
 
-const char* HEADER_SORT_LOGGER_OUTPUT = "./output/header_sort/info";
-const char* HEADER_SORT_OUTPUT = "./output/header_sort/sorted_headers.txt";
-const char* HEADER_SORT_INPUT = "./onegin/src/main.cpp";
+const char* HEADER_SORT_LOGGER_OUTPUT = "output/header_sort/info";
+const char* HEADER_SORT_OUTPUT = "output/header_sort/sorted_headers.txt";
+const char* HEADER_SORT_INPUT = "onegin/src/main.cpp";
 
 const option_t COMMANDS[] = {
     //   short_name    long_name         changeflag function         description                      has_arg

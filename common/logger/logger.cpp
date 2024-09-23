@@ -5,6 +5,12 @@
 #include "logger.h"
 #include "define_colors.h"
 
+static const char* LogMessageTypePrint(enum LogLevel level, bool color);
+
+static void TimePrint(FILE *out);
+
+static void AestheticizeString(const char *src, char *dst, size_t max_len);
+
 const size_t MAXLINE = 100;
 
 static logger_t* GetLogger() {
@@ -55,7 +61,7 @@ void Log(const enum LogLevel status, const char *fmt, ...) {
         return str;                       \
     } while(0)
 
-const char* LogMessageTypePrint(const enum LogLevel level, const bool color) {
+static const char* LogMessageTypePrint(const enum LogLevel level, const bool color) {
 
     switch (level) {
         case ERROR:
@@ -74,7 +80,7 @@ const char* LogMessageTypePrint(const enum LogLevel level, const bool color) {
 
 #undef ADD_COLOR_
 
-void TimePrint(FILE *out) {
+static void TimePrint(FILE *out) {
     assert(out != nullptr);
 
     time_t mytime = time(NULL);
@@ -85,7 +91,7 @@ void TimePrint(FILE *out) {
             time->tm_hour, time->tm_min,     time->tm_sec);
 }
 
-void AestheticizeString(const char *src, char *dst, const size_t max_len) {
+static void AestheticizeString(const char *src, char *dst, const size_t max_len) {
     assert(src != nullptr);
     assert(dst != nullptr);
 

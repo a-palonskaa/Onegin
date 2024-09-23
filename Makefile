@@ -1,43 +1,24 @@
-BUILD_DIR_EXECUTABLE = build/executable
-EXECUTABLE_ONEGIN = $(BUILD_DIR_EXECUTABLE)/onegin
-EXECUTABLE_HEADER_SORT = $(BUILD_DIR_EXECUTABLE)/header_sort
+SUBDIR_COMMON = common
+SUBDIRS_HEADER_SORT = common header_sort
+SUBDIRS_ONEGIN = common onegin
+SUBDIRS = common header_sort onegin
 
-CC = g++
-CFLAGS =
-BUILD_DIR = build
-SOURCES_ONEGIN =
-SOURCES_HEADER_SORT =
-OBJECTS_ONEGIN =
-OBJECTS_HEADER_SORT =
-DEPS_ONEGIN =
-DEPS_HEADER_SORT =
+all: osort
 
--include common/config.mk
+hsort:
+	@for dir in $(SUBDIRS_HEADER_SORT); do \
+		$(MAKE) -C $$dir all;        \
+	done
 
-all: onegin
+osort:
+	@for dir in $(SUBDIRS_ONEGIN); do \
+		$(MAKE) -C $$dir all;        \
+	done
 
--include onegin/config.mk
--include header_sort/config.mk
+lib:
+	$(MAKE) -C $(SUBDIR_COMMON) all
 
-onegin: $(EXECUTABLE_ONEGIN)
-
-$(EXECUTABLE_ONEGIN): $(OBJECTS_ONEGIN)
-	@$(CC) $(LDFLAGS) $^ -o $@
-
-$(BUILD_DIR)/%.o: %.cpp
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -MP -MMD -c $< -o $@
-
-header_sort: $(EXECUTABLE_HEADER_SORT)
-
-$(EXECUTABLE_HEADER_SORT): $(OBJECTS_HEADER_SORT)
-	@$(CC) $(LDFLAGS) $^ -o $@
-
--include $(DEPS)
-
-.PHONY: clean
 clean:
-	@rm -f $(OBJECTS_ONEGIN) $(OBJECTS_HEADER_SORT) $(EXECUTABLE_ONEGIN) $(EXECUTABLE_HEADER_SORT)
-
-echo:
-	@echo $(OBJECTS_ONEGIN)
+	@for dir in $(SUBDIRS); do   \
+		$(MAKE) -C $$dir clean; \
+	done

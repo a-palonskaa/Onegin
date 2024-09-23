@@ -2,6 +2,7 @@
 #define INCLUDES_SORT_H
 
 #include <stdio.h>
+#include <assert.h>
 
 #include "define_constants.h"
 #include "text_t_lib.h"

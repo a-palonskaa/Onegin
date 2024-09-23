@@ -22,6 +22,7 @@ int main(int argc, const char* argv[]) {
     FILE* logger_output = (!strcmp(flags.loger_output_file, "stdout")) ?
                             stdout : fopen(flags.loger_output_file, "w");
     if (logger_output== nullptr) {
+        printf("%s\n\n", flags.loger_output_file);
         perror("FAILED TO OPEN LOGGER OUTPUT FILE");
         logger_output = stdout;
     }
