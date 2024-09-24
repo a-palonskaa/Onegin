@@ -3,3 +3,4 @@ run
 build/
 trash
 .vscode
+utf-8/*.txt
