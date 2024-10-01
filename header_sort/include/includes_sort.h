@@ -5,12 +5,7 @@
 #include <assert.h>
 
 #include "define_constants.h"
-#include "text_t_lib.h"
-
-typedef struct {
-    string_t string;
-    char* include_name;
-} include_strings_t;
+#include "text_lib.h"
 
 void SortIncludes(text_t* text);
 

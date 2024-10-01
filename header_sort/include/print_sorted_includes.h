@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "text_t_lib.h"
+#include "text_lib.h"
 
 void PrintSortedIncludes(text_t* text, FILE* output_file);
 

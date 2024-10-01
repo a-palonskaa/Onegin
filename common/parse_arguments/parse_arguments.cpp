@@ -18,14 +18,14 @@ static cmd_error_t Help(flags_t* flags, const char* arg);
 static cmd_error_t ValidateInput(const flags_t* flags);
 static void PrintHelp();
 
-const char* ONEGIN_ORIGINAL = "output/onegin/sorted_onegin_full.txt";
-const char* ONEGIN_SORTED = "txtfiles/onegin_full.txt";
+const char* ONEGIN_SORTED = "output/onegin/sorted_onegin_full.txt";
+const char* ONEGIN_ORIGINAL = "txtfiles/onegin_full.txt";
 const char* ONEGIN_LOGGER_OUTPUT = "output/onegin/info";
 
 const char* HEADER_SORT_LOGGER_OUTPUT = "output/header_sort/info";
 const char* HEADER_SORT_OUTPUT = "output/header_sort/sorted_headers.txt";
 const char* HEADER_SORT_INPUT = "onegin/src/main.cpp";
-
+//STUB - ОТДЕЛИТЬ АРГПАРСЕРЫ, option_t, один файл и его модифицировать для sort headers, ValidateInput ptr, etc
 const option_t COMMANDS[] = {
     //   short_name    long_name         changeflag function         description                      has_arg
         {"-bs",     "--bubble_sort",   &ChangeFlagModeBubbleSort, "Testing mode"                     , false},
@@ -103,7 +103,7 @@ static cmd_error_t ChangeFlagLoggerOutput(flags_t* flags, const char* arg) {
     assert(flags != nullptr);
     (void) arg;
 
-    flags->loger_output_file = arg;
+    flags->logger_output_file = arg;
 
     return NO_CMD_ERRORS;
 }
@@ -207,9 +207,9 @@ void InitiallizeFlagsOnegin(flags_t* flags) {
 
     flags->sort_type = QUICK_SORT;
 
-    flags->output_file_name  = ONEGIN_ORIGINAL;
-    flags->input_file_name   = ONEGIN_SORTED;
-    flags->loger_output_file = ONEGIN_LOGGER_OUTPUT;
+    flags->output_file_name   = ONEGIN_SORTED;
+    flags->input_file_name    = ONEGIN_ORIGINAL;
+    flags->logger_output_file = ONEGIN_LOGGER_OUTPUT;
 
     STATIC_ASSERT(DEFAULT_SORT_AMOUNT == 3, Default_sorts_amount_should_be_3);
     flags->sort_mode_cnt_default = DEFAULT_SORT_AMOUNT;
@@ -230,9 +230,9 @@ void InitiallizeFlagsHeaderSort(flags_t* flags) {
 
     flags->sort_type = QUICK_SORT;
 
-    flags->output_file_name  = HEADER_SORT_OUTPUT;
-    flags->input_file_name   = HEADER_SORT_INPUT;
-    flags->loger_output_file = HEADER_SORT_LOGGER_OUTPUT;
+    flags->output_file_name   = HEADER_SORT_OUTPUT;
+    flags->input_file_name    = HEADER_SORT_INPUT;
+    flags->logger_output_file = HEADER_SORT_LOGGER_OUTPUT;
 
     InitiallizeValidationFlags(flags);
 }

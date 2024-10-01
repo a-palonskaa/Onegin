@@ -15,4 +15,9 @@
         (void) x_;                                        \
     } while (0)
 
+#define FREE(ptr) {    \
+    free(ptr);         \
+    ptr = nullptr;     \
+}
+
 #endif /* DEFINE_CONSTANTS_H */

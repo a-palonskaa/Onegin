@@ -1,14 +1,8 @@
-#ifndef MY_GET_LINE_V1_H
-#define MY_GET_LINE_V1_H
-
-#include <stdio.h>
-#include <stdlib.h>
-
-ssize_t MYGetLineV1(char** lineptr, size_t* n, FILE* stream);
+#include "get_line_v1.h"
 
 ssize_t MYGetLineV1(char** lineptr, size_t* n, FILE* stream) {
     size_t buffer_size = 10;
-    char symbol = 0;
+    int symbol = 0;
 
     if (*lineptr == nullptr) {
         *lineptr = (char*) calloc(buffer_size, sizeof(char));
@@ -34,14 +28,12 @@ ssize_t MYGetLineV1(char** lineptr, size_t* n, FILE* stream) {
 
             *lineptr = newlineptr;
         }
-        (*lineptr)[cnt++] = symbol;
+        (*lineptr)[cnt++] = (char) symbol;
     }
 
     (*lineptr)[cnt] = '\n';
     (*lineptr)[cnt + 1] = '\0';
     *n = cnt + 1;
 
-    return cnt + 1;
+    return (ssize_t) cnt + 1;
 }
-
-#endif /* MY_GET_LINE_V1_H */

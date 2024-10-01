@@ -45,9 +45,14 @@ error_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
         return LENGTH_ENCODE_ERROR;
     }
 
+    bool flag = false;
+
     for (size_t i = 2; i <= rune->width; i++) {
         if ((c = fgetc(stream)) == EOF) {
             return END_OF_FILE;
+        }
+        if ((c & 0xc0) != 0x80) {
+            flag = true;
         }
         rune->bits = rune->bits + ((uint32_t) c << (8 * (4 - i)));
     }
@@ -76,4 +81,32 @@ void PrintSymbolUTF8(my_rune_t* rune, FILE* outstream) {
     for (size_t i = 0; i < rune->width; i++) {
         fputc((unsigned char) ((rune->bits) >> (8 * (3 - i))), outstream);
     }
+}
+
+size_t EncodeSymbolUTF8(uint32_t code, char* buffer) {
+    size_t width = 0;
+
+    if (code <= 0x7F) {
+        width = 1;
+        buffer[0] = (char) code;
+    }
+    else if (code <= 0x7FF) {
+        width = 2;
+        buffer[0] = 0xC0 | (code >> 6);
+        buffer[1] = 0x80 | (code & 0x3F);
+    }
+    else if (code <= 0xFFFF) {
+        width = 3;
+        buffer[0] = 0xE0 | (code >> 12);
+        buffer[1] = 0x80 | ((code >> 6) & 0x3F);
+        buffer[2] = 0x80 | (code & 0x3F);
+    }
+    else if (code <= 0x10FFFF) {
+        width = 4;
+        buffer[0] = 0xF0 | (code >> 18);
+        buffer[1] = 0x80 | ((code >> 12) & 0x3F);
+        buffer[2] = 0x80 | ((code >> 6) & 0x3F);
+        buffer[3] = 0x80 | (code & 0x3F);
+    }
+    return width;
 }

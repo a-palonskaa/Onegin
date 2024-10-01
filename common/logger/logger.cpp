@@ -6,9 +6,7 @@
 #include "define_colors.h"
 
 static const char* LogMessageTypePrint(enum LogLevel level, bool color);
-
 static void TimePrint(FILE *out);
-
 static void AestheticizeString(const char *src, char *dst, size_t max_len);
 
 const size_t MAXLINE = 100;
@@ -22,6 +20,10 @@ void LoggerSetFile(FILE* out) {
     assert(out != nullptr);
 
     GetLogger()->file_out = out;
+
+    if (setvbuf(GetLogger()->file_out, nullptr, _IOFBF, 500)) { //REVIEW - like this?
+        return;
+    }
 }
 
 void LoggerSetLevel(enum LogLevel level) {
@@ -41,7 +43,7 @@ void Log(const enum LogLevel status, const char *fmt, ...) {
     va_list args;
     va_start (args, fmt);
 
-    bool color = GetLogger()->file_out == stdout;
+    bool color = GetLogger()->file_out == stderr || GetLogger()->file_out == stdout;
     fprintf(GetLogger()->file_out, "%s", LogMessageTypePrint (status, color));
     TimePrint(GetLogger()->file_out);
 

@@ -1,15 +1,14 @@
-#include <string.h>
-#include <stdlib.h>
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include "define_constants.h"
-#include "text_lib.h"
 #include "logger.h"
-#include "sort_and_print.h"
-#include "sort.h"
-#include "print_results.h"
 #include "parse_arguments.h"
+#include "print_results.h"
+#include "sort.h"
+#include "sort_and_print.h"
 #include "string_functions.h"
+#include "text_lib.h"
 
 int main(int argc, const char* argv[]) {
     flags_t flags = {};
@@ -19,13 +18,12 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    FILE* logger_output = (!strcmp(flags.logger_output_file, "stdout")) ?
-                        stdout : (!strcmp(flags.logger_output_file, "stderr")) ?
-                        stderr : fopen(flags.logger_output_file, "w");
-
+    FILE* logger_output = (!strcmp(flags.loger_output_file, "stdout")) ?
+                            stdout : fopen(flags.loger_output_file, "w");
     if (logger_output== nullptr) {
+        printf("%s\n\n", flags.loger_output_file);
         perror("FAILED TO OPEN LOGGER OUTPUT FILE");
-        logger_output = stderr;
+        logger_output = stdout;
     }
 
     LoggerSetLevel(DEBUG);
@@ -58,15 +56,7 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    bool empty_file_flag = false;
-    if (text.symbols_amount == 1 || text.strings_amount == 0) {
-        printf("EMPTY FILE\n");
-        empty_file_flag = true;
-    }
-
-    if (!empty_file_flag) {
-        SortAndPrintText(&text, &flags, output_file);
-    }
+    SortAndPrintText(&text, &flags, output_file);
 
     StringDtor(&text);
 
@@ -80,10 +70,7 @@ int main(int argc, const char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    if (fclose(logger_output) == EOF) {
-        perror("FAILED TO CLOSE OUTPUT FILE\n");
-        return EXIT_FAILURE;
-    }
-
     return EXIT_SUCCESS;
 }
+
+

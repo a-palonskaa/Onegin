@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "text_t_lib.h"
+#include "text_lib.h"
 #include "define_constants.h"
 
 void PrintTextTestMode(FILE* output_file, text_t* text, sort_mode_t mode);

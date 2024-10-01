@@ -8,7 +8,7 @@ typedef struct {
 } my_rune_t;
 
 typedef struct {
-    my_rune_t* runes;
+    uint32_t* runes;
     size_t length;
 } string_t;
 

@@ -7,12 +7,12 @@ all: osort
 
 hsort:
 	@for dir in $(SUBDIRS_HEADER_SORT); do \
-		$(MAKE) -C $$dir all;        \
+		$(MAKE) -C $$dir all;              \
 	done
 
 osort:
 	@for dir in $(SUBDIRS_ONEGIN); do \
-		$(MAKE) -C $$dir all;        \
+		$(MAKE) -C $$dir all;         \
 	done
 
 lib:

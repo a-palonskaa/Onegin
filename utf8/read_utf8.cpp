@@ -5,30 +5,29 @@
 const size_t MEMORY_BLOCK = 5;
 
 error_t ReadStrings(string_t* string, FILE* instream) {
+    my_rune_t new_rune = {};
     assert(string != nullptr);
     assert(instream != nullptr);
 
     size_t strlen = 0;
     size_t calloced_memory_length = MEMORY_BLOCK;
-    size_t rune_t_size = sizeof(my_rune_t);
-    string->runes = (my_rune_t*) calloc(MEMORY_BLOCK, rune_t_size);
+    string->runes = (uint32_t*) calloc(MEMORY_BLOCK, sizeof(uint32_t));
     bool eos_flag = false;
     error_t read_octet_flag = NO_ERRORS;
 
     while (!eos_flag) {
         while ((strlen < calloced_memory_length - 1 &&
-                (read_octet_flag = ReadOctetsUTF8(&string->runes[strlen], instream)) != END_OF_FILE) &&
-                DecodeSymbolUTF8(&string->runes[strlen]) != 0xA) {
+               (read_octet_flag = ReadOctetsUTF8(&new_rune, instream)) != END_OF_FILE) &&
+                DecodeSymbolUTF8(&new_rune) != 0xA) {
+            string->runes[strlen] = new_rune.code;
             strlen++;
         }
         if (strlen >= calloced_memory_length - 1) {
             calloced_memory_length += MEMORY_BLOCK;
-            string->runes = (my_rune_t*) realloc(string->runes, calloced_memory_length * rune_t_size);
+            string->runes = (uint32_t*) realloc(string->runes, calloced_memory_length * sizeof(uint32_t));
         }
         else {
-            string->runes[strlen].code = 0xA;
-            string->runes[strlen].bits = 0xA000000;
-            string->runes[strlen].width = 1;
+            string->runes[strlen] = 0xA;
             strlen++;
             eos_flag = true;
         }
@@ -47,7 +46,7 @@ void ReadText(text_t* text, FILE* instream) {
     while (!eof_flag) {
         while ((string_cnt < calloced_memory_length - 1 &&
                 ReadStrings(&text->strings[string_cnt], instream) != END_OF_FILE)) {
-            string_cnt++;
+            text->symbols_amount += text->strings[string_cnt++].length;
         }
 
         if (string_cnt >= calloced_memory_length - 1) {
@@ -61,4 +60,3 @@ void ReadText(text_t* text, FILE* instream) {
 
     text->strings_amount = string_cnt;
 }
-//ХУЙНЯ ПЕРЕДЕЛЫВАЙ - realloc at the end to cut unneccesary memory

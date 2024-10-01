@@ -7,12 +7,12 @@
 
 void SkipNonAlphaSymbols(const string_t* str, size_t* i, sort_mode_t mode) {
     if (mode == FORWARD) {
-        while(!isalpha(str->begin[*i]) && *i < str->length && str->begin[*i] != '\0') {
+        while (!isalpha(str->begin[*i]) && *i < str->length && str->begin[*i] != '\0') {
             (*i)++;
         }
     }
     else {
-        while(!isalpha(str->begin[*i]) && *i > 0 && str->begin[*i] != '\0') {
+        while (!isalpha(str->begin[*i]) && *i > 0 && str->begin[*i] != '\0') {
             (*i)--;
         }
     }

@@ -1,7 +1,7 @@
 #include "get_line.h"
 
 ssize_t MYGetLineV2(char** lineptr, size_t* n, FILE* stream) {
-    static const size_t MAX_STR_SIZE = 5;
+    static const size_t MAX_STR_SIZE = 100;
     static char* buffer = (char*) calloc(MAX_STR_SIZE, sizeof(char));
     static size_t buffer_size = MAX_STR_SIZE;
     static size_t cnt = 0;

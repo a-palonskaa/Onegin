@@ -23,7 +23,7 @@ SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))
 DEPS = $(OBJECTS:%.o=%.d)
 
-INCLUDES = include logger parse_arguments sort text_t_lib
+INCLUDES = include logger parse_arguments sort text_lib
 INCLUDES := $(addprefix ../common/,$(INCLUDES))
 
 CFLAGS += -I$(INCLUDE_DIR) $(addprefix -I,$(INCLUDES))

@@ -18,7 +18,7 @@ void BubbleSort(void* base, const size_t nel, const size_t width, compare_t comp
 void QuickSort(void* base, const size_t nel, const size_t width, compare_t compar) {
     QuickSortBasic(base, width, 0, nel - 1, compar);
 }
-
+//ANCHOR - static
 void QuickSortBasic(void* base_void, const size_t width, const size_t left, const size_t right, compare_t compar){
     assert(base_void != nullptr);
 
@@ -68,7 +68,7 @@ void SwapElements(void* s1, void* s2, const size_t width) {
         memcpy((uint64_t*) s1 + i, (uint64_t*) s2 + i, sizeof(uint64_t));
         memcpy((uint64_t*) s2 + i, &s, sizeof(uint64_t));
     }
-
+//NOTE - move pointers, not i *= 2
     i *= 2;
     if (width & 0x04) {
         memcpy(&s, (uint32_t*) s1 + i, sizeof(uint32_t));
@@ -90,6 +90,5 @@ void SwapElements(void* s1, void* s2, const size_t width) {
         memcpy(&s, (uint8_t*) s1 + i, sizeof(uint8_t));
         memcpy((uint8_t*) s1 + i, (uint8_t*) s2 + i, sizeof(uint8_t));
         memcpy((uint8_t*) s2 + i, &s, sizeof(uint8_t));
-        i++;
     }
 }

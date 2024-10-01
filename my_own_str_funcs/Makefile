@@ -19,7 +19,7 @@ MY_GETLINE_DIR = getline
 
 SOURCES_MY_FUNCS = test_str_functions.cpp str_functions.cpp
 SOURCES_MY_FUNCS := $(addprefix $(MY_FUNCS_DIR)/, $(SOURCES_MY_FUNCS))
-SOURCES_MY_GETLINE = get_line.cpp test_get_line.cpp
+SOURCES_MY_GETLINE = get_line_v1.cpp get_line_v2.cpp test_get_line.cpp
 SOURCES_MY_GETLINE := $(addprefix $(MY_GETLINE_DIR)/, $(SOURCES_MY_GETLINE))
 
 OBJECTS_MY_GETLINE = $(SOURCES_MY_GETLINE:.cpp=.o)

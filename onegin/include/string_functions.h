@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "text_t_lib.h"
+#include "text_lib.h"
 #include "define_constants.h"
 
 void SkipNonAlphaSymbols(const string_t* str, size_t* i, sort_mode_t mode);
