@@ -64,23 +64,22 @@ cmd_error_t ChangeFlagModeQuickSort(void* flag, const char* arg) {
 cmd_error_t Help(void* flag, const char* arg) {
     (void) arg;
     (void) flag;
-    flags_t* flags = (flags_t*) flag;
 
     PrintHelp();
     return INPUT_ERROR;
 }
 
 void PrintHelp() {
-    // for (size_t i = 0; i < COMMANDS_ARRAY_LENGTH; i++) {
-    //     printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
-    //                                    COMMANDS[i].long_name,
-    //                                    COMMANDS[i].description);
-    // }
+    for (size_t i = 0; i < CMD_ARRAY_LENGTH; i++) {
+        printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
+                                       COMMANDS[i].long_name,
+                                       COMMANDS[i].description);
+    }
 }
 
 cmd_error_t ValidateInput(const void* flag) {
     assert(flag != nullptr);
-    flags_t* flags = (flags_t*) flag;
+    const flags_t* flags = (const flags_t*) flag;
 
     if (flags->output_valid > 1 ||
         flags->input_valid > 1  ||

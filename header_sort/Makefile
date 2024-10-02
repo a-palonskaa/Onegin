@@ -19,7 +19,7 @@ SOURCE_DIR  = src
 EXECUTABLE = ../build/executable/hsort
 COMMON_LIBRARY = common.a
 
-SOURCES_HEADER = main.cpp includes_sort.cpp print_sorted_includes.cpp
+SOURCES_HEADER = main.cpp includes_sort.cpp print_sorted_includes.cpp hsort_argparser.cpp
 SOURCES = $(addprefix $(SOURCE_DIR)/, $(SOURCES_HEADER))
 
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))

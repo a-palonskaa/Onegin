@@ -13,12 +13,10 @@
 #include "onegin_argparser.h"
 
 int main(int argc, const char* argv[]) {
-
     flags_t flags = {};
     InitiallizeFlagsOnegin(&flags);
 
-    size_t commands_len = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
-    if (ArgParser(argc, argv, &flags, (const option_t**) &COMMANDS, commands_len, &ValidateInput) == INPUT_ERROR) {
+    if (ArgParser(argc, argv, &flags, COMMANDS, CMD_ARRAY_LENGTH, &ValidateInput) == INPUT_ERROR) {
         return EXIT_FAILURE;
     }
 

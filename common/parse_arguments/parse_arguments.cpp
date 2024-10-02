@@ -4,7 +4,7 @@
 #include "parse_arguments.h"
 
 cmd_error_t ArgParser(int argc, const char* argv[], void* flags,
-                      const option_t* commands[], size_t commands_len, cmd_error_t (*ValidateInput)(const void*)) {
+                      const option_t* commands, size_t commands_len, cmd_error_t (*ValidateInput)(const void*)) {
     assert(argv  != nullptr);
     assert(flags != nullptr);
     assert(argc >= 0);
@@ -19,23 +19,23 @@ cmd_error_t ArgParser(int argc, const char* argv[], void* flags,
         int has_arg_validate = 0;
 
         for (size_t i = 0; i < COMMANDS_ARRAY_LENGTH; i++) {
-            if(!(strcmp(*argv, (*commands)[i].name) &&
-                 strcmp(*argv, (*commands)[i].long_name))) {
+            if(!(strcmp(*argv, commands[i].name) &&
+                 strcmp(*argv, commands[i].long_name))) {
 
                 has_arg_validate++;
 
-                if ((*commands)[i].has_arg && argc <= 1) {
+                if (commands[i].has_arg && argc <= 1) {
                     return INPUT_ERROR;
                 }
 
                 cmd_error_t state = NO_CMD_ERRORS;
 
-                if (!(*commands)[i].has_arg) {
-                    state = (*commands)[i].change(flags, nullptr);
+                if (!commands[i].has_arg) {
+                    state = commands[i].change(flags, nullptr);
                 }
                 else {
                     argc--;
-                    state = (*commands)[i].change(flags, *++argv);
+                    state = commands[i].change(flags, *++argv);
                 }
 
                 if (state == INPUT_ERROR) {

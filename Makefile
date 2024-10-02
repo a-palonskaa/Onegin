@@ -2,7 +2,7 @@ SUBDIR_COMMON = common
 SUBDIRS_HEADER_SORT = common header_sort
 SUBDIRS_ONEGIN = common onegin
 SUBDIRS_UTF8 = common utf8
-SUBDIRS = common header_sort onegin
+SUBDIRS = common header_sort onegin utf8
 
 all: osort
 

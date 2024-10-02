@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <time.h>
+
 #include "utf8_decode.h"
 #include "defines.h"
 #include "utf8_text.h"
@@ -6,7 +8,6 @@
 #include "logger.h"
 #include "string_functions.h"
 #include "sort.h"
-#include <time.h>
 
 int main() {
     FILE* logger_output = fopen("utf8/logger.txt", "w");

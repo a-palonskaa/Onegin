@@ -50,4 +50,6 @@ const option_t COMMANDS[] = {
         {"-l",   "--logger_output", &ChangeFlagLoggerOutput,   "Print logger messages in the file", true},
 };
 
+const size_t CMD_ARRAY_LENGTH = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
+
 #endif /* ONEGIN_ARGPARSER_H */

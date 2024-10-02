@@ -3,6 +3,23 @@
 
 #include "parse_arguments.h"
 
+typedef struct {
+    const char* input_file_name;
+    const char* output_file_name;
+    const char* logger_output_file;
+
+    int input_valid;
+    int output_valid;
+} flags_t;
+
+cmd_error_t ChangeFlagInputFile(void* flags, const char* arg);
+cmd_error_t ChangeFlagOutputFile(void* flags, const char* arg);
+cmd_error_t ChangeFlagLoggerOutput(void* flags, const char* arg);
+cmd_error_t Help(void* flags, const char* arg);
+void InitiallizeFlagsHeaderSort(void* flag);
+cmd_error_t ValidateInput(const void* flag);
+void PrintHelp();
+
 const option_t COMMANDS[] = {
     // short_name  long_name         changeflag function         description                     has_arg
         {"-i",  "--input_file",    &ChangeFlagInputFile,      "Read data from the file"          , true},
@@ -11,11 +28,6 @@ const option_t COMMANDS[] = {
         {"-l",  "--logger_output", &ChangeFlagLoggerOutput,   "Print logger messages in the file", true},
 };
 
-cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg);
-cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg);
-cmd_error_t ChangeFlagLoggerOutput(flags_t* flags, const char* arg);
-cmd_error_t Help(flags_t* flags, const char* arg);
-
-void InitiallizeFlagsOnegin(flags_t* flags);
+const size_t COMMANDS_ARRAY_LENGTH = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
 
 #endif /* HSORT_ARGPARSER_H */

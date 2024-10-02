@@ -7,13 +7,13 @@
 #include "text_lib.h"
 #include "logger.h"
 #include "print_sorted_includes.h"
+#include "hsort_argparser.h"
 
 int main(int argc, const char* argv[]) {
     flags_t flags = {};
     InitiallizeFlagsHeaderSort(&flags);
 
-    size_t commands_len = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
-    if (ArgParser(argc, argv, &flags, (const option_t**) &COMMANDS, commands_len) == INPUT_ERROR) {
+    if (ArgParser(argc, argv, &flags, COMMANDS, COMMANDS_ARRAY_LENGTH, &ValidateInput) == INPUT_ERROR) {
         return EXIT_FAILURE;
     }
 

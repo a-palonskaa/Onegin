@@ -5,9 +5,12 @@ const char* HEADER_SORT_LOGGER_OUTPUT = "output/header_sort/info";
 const char* HEADER_SORT_OUTPUT = "output/header_sort/sorted_headers.txt";
 const char* HEADER_SORT_INPUT = "onegin/src/main.cpp";
 
-cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg) {
-    assert(flags != nullptr);
+static void InitiallizeValidationFlags(void* flag);
+
+cmd_error_t ChangeFlagInputFile(void* flag, const char* arg) {
+    assert(flag != nullptr);
     (void) arg;
+    flags_t* flags = (flags_t*) flag;
 
     flags->input_valid++;
     flags->input_file_name = arg;
@@ -15,18 +18,20 @@ cmd_error_t ChangeFlagInputFile(flags_t* flags, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
-cmd_error_t ChangeFlagLoggerOutput(flags_t* flags, const char* arg) {
-    assert(flags != nullptr);
+cmd_error_t ChangeFlagLoggerOutput(void* flag, const char* arg) {
+    assert(flag != nullptr);
     (void) arg;
+    flags_t* flags = (flags_t*) flag;
 
     flags->logger_output_file = arg;
 
     return NO_CMD_ERRORS;
 }
 
-cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg) {
-    assert(flags != nullptr);
+cmd_error_t ChangeFlagOutputFile(void* flag, const char* arg) {
+    assert(flag != nullptr);
     (void) arg;
+    flags_t* flags = (flags_t*) flag;
 
     flags->output_valid++;
     flags->output_file_name = arg;
@@ -34,22 +39,49 @@ cmd_error_t ChangeFlagOutputFile(flags_t* flags, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
-cmd_error_t Help(flags_t* flags, const char* arg) {
+cmd_error_t Help(void* flag, const char* arg) {
     (void) arg;
-    (void) flags;
+    (void) flag;
 
     PrintHelp();
     return INPUT_ERROR;
 }
 
-void InitiallizeFlagsHeaderSort(flags_t* flags) {
-    assert(flags != nullptr);
+void PrintHelp() {
+    for (size_t i = 0; i < COMMANDS_ARRAY_LENGTH; i++) {
+        printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
+                                    COMMANDS[i].long_name,
+                                    COMMANDS[i].description);
+    }
+}
 
-    flags->sort_type = QUICK_SORT;
+cmd_error_t ValidateInput(const void* flag) {
+    assert(flag != nullptr);
+    const flags_t* flags = (const flags_t*) flag;
 
-    flags->output_file_name   = HEADER_SORT_OUTPUT;
-    flags->input_file_name    = HEADER_SORT_INPUT;
+    if (flags->output_valid > 1 ||
+        flags->input_valid > 1) {
+        printf("MUTUAL DESTRUCTION ERROR\n");
+        return INPUT_ERROR;
+    }
+    return NO_CMD_ERRORS;
+}
+
+void InitiallizeFlagsHeaderSort(void* flag) {
+    assert(flag != nullptr);
+    flags_t* flags = (flags_t*) flag;
+
+    flags->output_file_name  = HEADER_SORT_OUTPUT;
+    flags->input_file_name   = HEADER_SORT_INPUT;
     flags->logger_output_file = HEADER_SORT_LOGGER_OUTPUT;
 
     InitiallizeValidationFlags(flags);
+}
+
+static void InitiallizeValidationFlags(void* flag) {
+    assert(flag != nullptr);
+    flags_t* flags = (flags_t*) flag;
+
+    flags->output_valid    = 0;
+    flags->input_valid     = 0;
 }
