@@ -15,6 +15,9 @@ typedef struct {
 typedef struct {
     size_t strings_amount;
     size_t symbols_amount;
+    size_t bytes_amount;
+
+    char* buffer;
     string_t* strings;
 } text_t;
 

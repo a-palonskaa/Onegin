@@ -4,15 +4,36 @@
 
 #include "logger.h"
 #include "utf8_text.h"
+#include "define_constants.h"
 
-const size_t MEMORY_BLOCK = 200000;
+const size_t MEMORY_BLOCK = 5000;
 
-errors_t ReadStrings(string_t* string, FILE* instream) {
+ssize_t FindFileSize(FILE* input_file) {
+    assert(input_file != nullptr);
+
+    struct stat file_data = {};
+
+    if (fstat(fileno(input_file), &file_data) == -1) {
+        Log(ERROR, "FAILED TO READ THE FILE\n" STRERROR(errno));
+        return -1;
+    }
+
+    if (file_data.st_size == 0) {
+        Log(WARNING, "EMPTY FILE\n" STRERROR(errno));
+    }
+
+    Log(INFO, "FILE SIZE: %zu\n", file_data.st_size);
+    return (ssize_t) file_data.st_size;
+}
+
+size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* instream) {
     my_rune_t new_rune = {};
-    assert(string != nullptr);
+    assert(text != nullptr);
     assert(instream != nullptr);
 
+    string_t* string = &text->strings[string_cnt];
     size_t strlen = 0;
+    size_t bytes_cnt = 0;
     size_t calloced_memory_length = MEMORY_BLOCK;
     string->runes = (uint32_t*) calloc(MEMORY_BLOCK, sizeof(uint32_t));
     bool eos_flag = false;
@@ -20,9 +41,10 @@ errors_t ReadStrings(string_t* string, FILE* instream) {
 
     while (!eos_flag) {
         while ((strlen < calloced_memory_length - 1 &&
-               (read_octet_flag = ReadOctetsUTF8(&new_rune, instream)) != END_OF_FILE) &&
+               (read_octet_flag = ReadOctetsUTF8(&new_rune, &text->buffer[in_bytes_cnt + bytes_cnt])) != END_OF_FILE) &&
                 DecodeSymbolUTF8(&new_rune) != 0xA) {
             string->runes[strlen] = new_rune.code;
+            bytes_cnt += new_rune.width;
             strlen++;
         }
         if (strlen >= calloced_memory_length - 1) {
@@ -31,25 +53,32 @@ errors_t ReadStrings(string_t* string, FILE* instream) {
         }
         else {
             string->runes[strlen] = 0xA;
+            bytes_cnt += 1;
             strlen++;
             eos_flag = true;
         }
     }
     string->length = strlen;
-    return read_octet_flag;
+    return bytes_cnt; //FIXME - if read_octet_flag - error return 0 or -1 kinda
 }
 
-void ReadText(text_t* text, FILE* instream) {
-    size_t calloced_memory_length = MEMORY_BLOCK;
+void ParseText(text_t* text, FILE* instream) {
+    assert(text != nullptr);
+    assert(instream != nullptr);
+
     size_t string_t_size = sizeof(string_t);
-    text->strings = (string_t*) calloc(MEMORY_BLOCK, string_t_size);
     bool eof_flag = false;
     size_t string_cnt = 0;
+    size_t bytes_cnt = 0;
+
+    size_t calloced_memory_length = (size_t) text->bytes_amount / 40;
+    text->strings = (string_t*) calloc(calloced_memory_length, string_t_size);
 
     while (!eof_flag) {
 
-        while ((string_cnt < calloced_memory_length - 1 &&
-                ReadStrings(&text->strings[string_cnt], instream) != END_OF_FILE)) {
+        while (string_cnt < calloced_memory_length - 1 &&
+               bytes_cnt < text->bytes_amount) {
+            bytes_cnt += ReadStrings(text, string_cnt, bytes_cnt, instream);
             text->symbols_amount += text->strings[string_cnt++].length;
         }
 
@@ -61,7 +90,6 @@ void ReadText(text_t* text, FILE* instream) {
             eof_flag = true;
         }
     }
-
     text->strings_amount = string_cnt;
 }
 
@@ -69,7 +97,39 @@ error_t StringCtor(text_t* text, FILE* input_file) {
     assert(input_file != nullptr);
     assert(text != nullptr);
 
-    ReadText(text, input_file);
+    ssize_t bytes_amount = FindFileSize(input_file);
+    if (bytes_amount == -1) {
+        return FILE_READ_ERROR;
+    }
+    text->bytes_amount = (size_t) bytes_amount;
+    text->buffer = (char*) calloc(text->bytes_amount, sizeof(char));
+
+    ssize_t position_in_file = ftell(input_file);
+    if (position_in_file == -1) {
+        return PTR_POSITION_INDICATION_ERROR;
+    }
+
+    if (fseek(input_file, 0, SEEK_SET)) {
+        Log(ERROR, "FAILED TO MOVE POINTER IN THE FILE\n" STRERROR(errno));
+        StringDtor(text);
+        return INFILE_PTR_MOVING_ERROR;
+    }
+
+    if ((fread(text->buffer, sizeof(char), text->bytes_amount, input_file) != text->bytes_amount) &&
+         !feof(input_file) &&
+         ferror(input_file)) {
+        Log(ERROR, "FILE READ ERROR\n" STRERROR(errno));
+        StringDtor(text);
+        return FILE_READ_ERROR;
+    }
+
+    if (fseek(input_file, position_in_file, SEEK_SET)) {
+        Log(ERROR, "FAILED TO MOVE POINTER IN THE FILE\n" STRERROR(errno));
+        StringDtor(text);
+        return INFILE_PTR_MOVING_ERROR;
+    }
+
+    ParseText(text, input_file);
 
     Log(INFO, "TEXT STRUCTURE WAS SUCCESSFULLY CREATED AND INITIALIZED\n");
     return NO_ERRORS;
@@ -85,6 +145,9 @@ void StringDtor(text_t* text) {
 
     free(text->strings);
     text->strings = nullptr;
+
+    free(text->buffer);
+    text->buffer = nullptr;
 
     text->strings_amount = 0;
     text->symbols_amount = 0;

@@ -39,7 +39,7 @@ int CompareStringsForward(const void* str1, const void* str2) {
         SkipNonAlphaSymbols(s1, &i, FORWARD);
         SkipNonAlphaSymbols(s2, &j, FORWARD);
     }
-    return (int) ToLowerUTF8(s1->runes[i]) - ToLowerUTF8(s2->runes[j]);
+    return (int) (ToLowerUTF8(s1->runes[i]) - ToLowerUTF8(s2->runes[j]));
 }
 
 int CompareStringsBackward(const void* str1, const void* str2) {
@@ -64,7 +64,7 @@ int CompareStringsBackward(const void* str1, const void* str2) {
         SkipNonAlphaSymbols(s2, &j, BACKWARD);
     }
 
-    return (int) ToLowerUTF8(s1->runes[i]) - ToLowerUTF8(s2->runes[j]);
+    return (int) (ToLowerUTF8(s1->runes[i]) - ToLowerUTF8(s2->runes[j]));
 }
 
 bool IsAlphaUtf8(uint32_t code) {

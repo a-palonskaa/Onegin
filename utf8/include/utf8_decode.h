@@ -16,7 +16,7 @@ typedef enum {
     POISON_VALUE        = 3
 } errors_t;
 
-errors_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream);
+errors_t ReadOctetsUTF8(my_rune_t* rune, char* buffer);
 uint32_t DecodeSymbolUTF8(my_rune_t* rune);
 void PrintSymbolUTF8(my_rune_t* rune, FILE* outstream);
 size_t EncodeSymbolUTF8(uint32_t code, char* buffer);

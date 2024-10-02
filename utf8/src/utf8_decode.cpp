@@ -30,15 +30,11 @@ static errors_t CountOctetsUTF8(my_rune_t* rune) {
 }
 
 
-errors_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
+errors_t ReadOctetsUTF8(my_rune_t* rune, char* buffer) {
     assert(rune != nullptr);
-    assert(stream != nullptr);
+    assert(buffer != nullptr);
 
-    int c = 0;
-    if ((c = fgetc(stream)) == EOF) {
-        return END_OF_FILE;
-    }
-
+    char c = *buffer;
     rune->bits = (uint32_t) c << 24;
 
     if (CountOctetsUTF8(rune) != NOERRORS) {
@@ -46,9 +42,7 @@ errors_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
     }
 
     for (size_t i = 2; i <= rune->width; i++) {
-        if ((c = fgetc(stream)) == EOF) {
-            return END_OF_FILE;
-        }
+        c = *(buffer + i);
         rune->bits = rune->bits + ((uint32_t) c << (8 * (4 - i)));
     }
     return NOERRORS;

@@ -17,7 +17,8 @@ typedef enum {
 error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
 
-errors_t ReadStrings(string_t* text, FILE* instream);
-void ReadText(text_t* text, FILE* instream);
+ssize_t FindFileSize(FILE* input_file);
+size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* instream);
+void ParseText(text_t* text, FILE* instream);
 
 #endif /* UTF8_TEXT_H */
