@@ -14,7 +14,8 @@ typedef enum {
     FORWARD  = 0,
     BACKWARD = 1,
     NO_SORT  = 2
-} sort_mode_t;
+}
+sort_mode_t;
 
 typedef enum {
     NO_CMD_ERRORS = 0,

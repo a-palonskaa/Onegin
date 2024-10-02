@@ -5,6 +5,7 @@
 
 #include "utf8_text.h"
 #include "defines.h"
+#include "parse_arguments.h"
 
 void SkipNonAlphaSymbols(const string_t* str, size_t* i, sort_mode_t mode);
 
