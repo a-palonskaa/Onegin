@@ -2,13 +2,12 @@
 #include <stdlib.h>
 
 #include "print.h"
-#include "text_t.h"
+#include "utf8_text.h"
 #include "utf8_decode.h"
 
 void PrintText(text_t* text, FILE* outstream) {
     char* buffer = (char*) calloc(text->symbols_amount * 4, sizeof(char));
     size_t buffer_len = 0;
-
 
     for (size_t j = 0; j < text->strings_amount; j++) {
         for (size_t i = 0; i < text->strings[j].length; i++) {
@@ -21,6 +20,7 @@ void PrintText(text_t* text, FILE* outstream) {
 
     buffer[++buffer_len] = '\0';
     fputs(buffer, outstream);
+
     free(buffer);
     buffer = nullptr;
 }

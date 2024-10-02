@@ -1,7 +1,7 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include "define_consts.h"
+#include "utf8_text.h"
 
 void PrintText(text_t* text, FILE* outstream);
 

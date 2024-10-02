@@ -2,16 +2,16 @@
 
 #include "utf8_decode.h"
 
-static error_t CountOctetsUTF8(my_rune_t* rune);
+static errors_t CountOctetsUTF8(my_rune_t* rune);
 
-static error_t CountOctetsUTF8(my_rune_t* rune) {
+static errors_t CountOctetsUTF8(my_rune_t* rune) {
     assert(rune != nullptr);
     uint32_t bits = rune->bits;
     size_t cnt = 0;
 
     if (!(bits & FIRST_BIT_ZERO_MASK)) {
         rune->width = ++cnt;
-        return NO_ERRORS;
+        return NOERRORS;
     }
 
     cnt++;
@@ -26,11 +26,11 @@ static error_t CountOctetsUTF8(my_rune_t* rune) {
     }
     rune->width = cnt;
 
-    return NO_ERRORS;
+    return NOERRORS;
 }
 
 
-error_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
+errors_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
     assert(rune != nullptr);
     assert(stream != nullptr);
 
@@ -41,7 +41,7 @@ error_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
 
     rune->bits = (uint32_t) c << 24;
 
-    if (CountOctetsUTF8(rune) != NO_ERRORS) {
+    if (CountOctetsUTF8(rune) != NOERRORS) {
         return LENGTH_ENCODE_ERROR;
     }
 
@@ -56,7 +56,7 @@ error_t ReadOctetsUTF8(my_rune_t* rune, FILE* stream) {
         }
         rune->bits = rune->bits + ((uint32_t) c << (8 * (4 - i)));
     }
-    return NO_ERRORS;
+    return NOERRORS;
 }
 
 uint32_t DecodeSymbolUTF8(my_rune_t* rune) {
