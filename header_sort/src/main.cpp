@@ -12,7 +12,8 @@ int main(int argc, const char* argv[]) {
     flags_t flags = {};
     InitiallizeFlagsHeaderSort(&flags);
 
-    if (ArgParser(argc, argv, &flags) == INPUT_ERROR) {
+    size_t commands_len = sizeof(COMMANDS) / sizeof(COMMANDS[0]);
+    if (ArgParser(argc, argv, &flags, (const option_t**) &COMMANDS, commands_len) == INPUT_ERROR) {
         return EXIT_FAILURE;
     }
 

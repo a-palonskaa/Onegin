@@ -5,6 +5,7 @@
 
 #include "text_lib.h"
 #include "define_constants.h"
+#include "onegin_argparser.h"
 
 void PrintTextTestMode(FILE* output_file, text_t* text, sort_mode_t mode);
 void PrintSortedText(FILE* output_file, text_t* text, flags_t* flags);

@@ -17,7 +17,7 @@ EXECUTABLE = ../build/executable/onegin
 INCLUDE_DIR = include
 SOURCE_DIR  = src
 
-SOURCES = main.cpp print_results.cpp sort_and_print.cpp string_functions.cpp
+SOURCES = main.cpp print_results.cpp sort_and_print.cpp string_functions.cpp onegin_argparser.cpp
 
 SOURCES := $(addprefix $(SOURCE_DIR)/, $(SOURCES))
 OBJECTS += $(addprefix $(BUILD_DIR)/, $(SOURCES:%.cpp=%.o))

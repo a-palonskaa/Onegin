@@ -5,6 +5,7 @@
 
 #include "define_constants.h"
 #include "text_lib.h"
+#include "onegin_argparser.h"
 
 void SortAndPrintText(text_t* text, flags_t* flags, FILE* output_file);
 
