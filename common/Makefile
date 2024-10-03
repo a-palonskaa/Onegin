@@ -43,13 +43,13 @@ all: $(OUT)
 
 $(OBJECTS):$(BUILD_DIR)/%.o:%.cpp
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -MP -MMD -c $< -o $@
+	@$(CC) $(CFLAGS) -MP -MMD -c $< -o $@
 
 $(OUT):$(OBJECTS)
-	ar rcs $(OUT) $(OBJECTS)
+	@ar rcs $(OUT) $(OBJECTS)
 
 clean:
-	rm -f $(OUT) $(OBJECTS) $(DEPS)
+	@rm -f $(OUT) $(OBJECTS) $(DEPS)
 
 NODEPS = clean
 

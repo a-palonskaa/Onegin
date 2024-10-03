@@ -23,7 +23,7 @@ void LoggerSetFile(FILE* out) {
 
     GetLogger()->file_out = out;
 
-    if (setvbuf(GetLogger()->file_out, nullptr, _IOFBF, 500)) { //REVIEW - like this?
+    if (setvbuf(GetLogger()->file_out, nullptr, _IOFBF, 500)) {
         return;
     }
 }

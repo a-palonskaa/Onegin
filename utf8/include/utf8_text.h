@@ -12,13 +12,14 @@ typedef enum {
     INFILE_PTR_MOVING_ERROR       = 3,
     EMPTY_FILE_ERROR              = 4,
     PTR_POSITION_INDICATION_ERROR = 5,
+    SYMBOLS_DECODING_ERROR        = 6,
 } error_t;
 
 error_t StringCtor(text_t* text, FILE* input_file);
 void StringDtor(text_t* text);
 
 ssize_t FindFileSize(FILE* input_file);
-size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* instream);
-void ParseText(text_t* text, FILE* instream);
+ssize_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* instream);
+error_t ParseText(text_t* text, FILE* instream);
 
 #endif /* UTF8_TEXT_H */

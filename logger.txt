@@ -1,3 +1,0 @@
-[ERROR] 02.10.2024 14:35:20 
-	FAILED TO OPEN INPUT FILE
-	: No such file or directory

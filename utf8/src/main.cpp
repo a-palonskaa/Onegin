@@ -10,7 +10,7 @@
 #include "sort.h"
 
 int main() {
-    FILE* logger_output = fopen("utf8/logger.txt", "w");
+    FILE* logger_output = fopen("output/utf8/logger.txt", "w");
 
     if (logger_output== nullptr) {
         perror("FAILED TO OPEN LOGGER OUTPUT FILE");
@@ -20,13 +20,13 @@ int main() {
     LoggerSetLevel(DEBUG);
     LoggerSetFile(logger_output);
 
-    FILE* input_file  = fopen("utf8/in.txt", "r");
+    FILE* input_file  = fopen("txtfiles/onegin_rus.txt", "r");
     if (input_file == nullptr) {
         Log(ERROR, "FAILED TO OPEN INPUT FILE\n" STRERROR(errno));
         return EXIT_FAILURE;
     }
 
-    FILE* output_file = fopen("utf8/out.txt", "w");
+    FILE* output_file = fopen("output/utf8/sorted_text.txt", "w");
     if (output_file == nullptr) {
         Log(ERROR, "FAILED TO OPEN OUTPUT FILE\n" STRERROR(errno));
         return EXIT_FAILURE;

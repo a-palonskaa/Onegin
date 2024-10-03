@@ -4,7 +4,7 @@ SUBDIRS_ONEGIN = common onegin
 SUBDIRS_UTF8 = common utf8
 SUBDIRS = common header_sort onegin utf8
 
-all: osort
+all: osort hsort rus lib
 
 hsort:
 	@for dir in $(SUBDIRS_HEADER_SORT); do \
@@ -22,7 +22,7 @@ rus:
 	done
 
 lib:
-	$(MAKE) -C $(SUBDIR_COMMON) all
+	@$(MAKE) -C $(SUBDIR_COMMON) all;
 
 clean:
 	@for dir in $(SUBDIRS); do   \

@@ -46,7 +46,7 @@ $(OBJECTS): $(BUILD_DIR)/%.o:%.cpp
 
 .PHONY: clean
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE) $(DEPS)
+	@rm -f $(OBJECTS) $(EXECUTABLE) $(DEPS)
 
 NODEPS = clean
 
