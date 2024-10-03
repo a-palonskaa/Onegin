@@ -33,7 +33,7 @@ size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* i
 
     string_t* string = &text->strings[string_cnt];
     size_t strlen = 0;
-    size_t bytes_cnt = 0;
+    size_t bytes_cnt = in_bytes_cnt;
     size_t calloced_memory_length = MEMORY_BLOCK;
     string->runes = (uint32_t*) calloc(MEMORY_BLOCK, sizeof(uint32_t));
     bool eos_flag = false;
@@ -41,11 +41,10 @@ size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* i
 
     while (!eos_flag) {
         while ((strlen < calloced_memory_length - 1 &&
-               (read_octet_flag = ReadOctetsUTF8(&new_rune, &text->buffer[in_bytes_cnt + bytes_cnt])) != END_OF_FILE) &&
+               (read_octet_flag = ReadOctetsUTF8(&new_rune, &text->buffer[bytes_cnt])) != END_OF_FILE) &&
                 DecodeSymbolUTF8(&new_rune) != 0xA) {
-            string->runes[strlen] = new_rune.code;
+            string->runes[strlen++] = new_rune.code;
             bytes_cnt += new_rune.width;
-            strlen++;
         }
         if (strlen >= calloced_memory_length - 1) {
             calloced_memory_length += MEMORY_BLOCK;
@@ -59,7 +58,7 @@ size_t ReadStrings(text_t* text, size_t string_cnt, size_t in_bytes_cnt, FILE* i
         }
     }
     string->length = strlen;
-    return bytes_cnt; //FIXME - if read_octet_flag - error return 0 or -1 kinda
+    return bytes_cnt -  in_bytes_cnt; //FIXME - if read_octet_flag - error return 0 or -1 kinda
 }
 
 void ParseText(text_t* text, FILE* instream) {
@@ -102,7 +101,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
         return FILE_READ_ERROR;
     }
     text->bytes_amount = (size_t) bytes_amount;
-    text->buffer = (char*) calloc(text->bytes_amount, sizeof(char));
+    text->buffer = (unsigned char*) calloc(text->bytes_amount, sizeof(unsigned char));
 
     ssize_t position_in_file = ftell(input_file);
     if (position_in_file == -1) {
@@ -115,7 +114,7 @@ error_t StringCtor(text_t* text, FILE* input_file) {
         return INFILE_PTR_MOVING_ERROR;
     }
 
-    if ((fread(text->buffer, sizeof(char), text->bytes_amount, input_file) != text->bytes_amount) &&
+    if ((fread(text->buffer, sizeof(unsigned char), text->bytes_amount, input_file) != text->bytes_amount) &&
          !feof(input_file) &&
          ferror(input_file)) {
         Log(ERROR, "FILE READ ERROR\n" STRERROR(errno));

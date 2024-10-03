@@ -7,6 +7,8 @@
 
 static error_t StringsEnumCtor(text_t* text);
 
+//----------------------------------------------------------------------------------------------
+
 ssize_t FindFileSize(FILE* input_file) {
     assert(input_file != nullptr);
 
@@ -79,6 +81,8 @@ size_t CountTextLines(text_t* text) {
     return lines_cnt;
 }
 
+//----------------------------------------------------------------------------------------------
+
 void ParseText(text_t* text) {
     assert(text != nullptr);
 
@@ -125,6 +129,44 @@ void ParseText(text_t* text) {
     }
 
     Log(INFO, "TEXT WAS SUCCESSFULLY PARSED\n");
+}
+
+//----------------------------------------------------------------------------------------------
+
+static error_t StringsEnumCtor(text_t* text) {
+    assert(text != nullptr);
+
+    if (text->sort_state == DEFAULT) {
+        text->strings.non_sorted = (string_t*) calloc(text->strings_amount, sizeof(string_t));
+
+        if (text->strings.non_sorted == nullptr) {
+            StringDtor(text);
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
+            return MEMORY_ALLOCATE_ERROR;
+        }
+    }
+    else {
+        text->strings.sorted = (string_t**) calloc(SORT_TYPES_CNT, sizeof(string_t*));
+
+        if (text->strings.sorted == nullptr) {
+            StringDtor(text);
+            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
+            return MEMORY_ALLOCATE_ERROR;
+        }
+
+        size_t i = 0;
+
+        for(;i < SORT_TYPES_CNT; i++) {
+            text->strings.sorted[i] = (string_t*) calloc(text->strings_amount, sizeof(string_t));
+
+            if (text->strings.sorted[i] == nullptr) {
+                StringDtor(text);
+                Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
+                return MEMORY_ALLOCATE_ERROR;
+            }
+        }
+    }
+    return NO_ERRORS;
 }
 
 error_t StringCtor(text_t* text, FILE* input_file) {
@@ -204,6 +246,8 @@ void StringDtor(text_t* text) {
     Log(INFO, "TEXT STRUCTURE WAS SUCCESSFULLY DESTRUCTED\n");
 }
 
+//----------------------------------------------------------------------------------------------
+
 void GetTextSymbols(text_t* text, FILE* input_file) {
     assert(text != nullptr);
     assert(input_file != nullptr);
@@ -218,42 +262,8 @@ void GetTextSymbols(text_t* text, FILE* input_file) {
     Log(INFO, "TEXT WAS SUCCESSFULLY READ\n");
 }
 
+
 void CopyStrings(string_t* dst, string_t* src, const size_t str_cnt) {
     memcpy(dst, src, sizeof(string_t) * str_cnt);
 }
 
-static error_t StringsEnumCtor(text_t* text) {
-    assert(text != nullptr);
-
-    if (text->sort_state == DEFAULT) {
-        text->strings.non_sorted = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-
-        if (text->strings.non_sorted == nullptr) {
-            StringDtor(text);
-            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
-            return MEMORY_ALLOCATE_ERROR;
-        }
-    }
-    else {
-        text->strings.sorted = (string_t**) calloc(SORT_TYPES_CNT, sizeof(string_t*));
-
-        if (text->strings.sorted == nullptr) {
-            StringDtor(text);
-            Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
-            return MEMORY_ALLOCATE_ERROR;
-        }
-
-        size_t i = 0;
-
-        for(;i < SORT_TYPES_CNT; i++) {
-            text->strings.sorted[i] = (string_t*) calloc(text->strings_amount, sizeof(string_t));
-
-            if (text->strings.sorted[i] == nullptr) {
-                StringDtor(text);
-                Log(ERROR, "FAILED TO ALLOCATE THE MEMORY\n" STRERROR(errno));
-                return MEMORY_ALLOCATE_ERROR;
-            }
-        }
-    }
-    return NO_ERRORS;
-}

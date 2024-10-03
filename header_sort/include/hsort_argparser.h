@@ -12,13 +12,19 @@ typedef struct {
     int output_valid;
 } flags_t;
 
+//----------------------------------------------------------------------------------------------
+
+void InitiallizeFlagsHeaderSort(void* flag);
+
 cmd_error_t ChangeFlagInputFile(void* flags, const char* arg);
 cmd_error_t ChangeFlagOutputFile(void* flags, const char* arg);
 cmd_error_t ChangeFlagLoggerOutput(void* flags, const char* arg);
+
 cmd_error_t Help(void* flags, const char* arg);
-void InitiallizeFlagsHeaderSort(void* flag);
+
 cmd_error_t ValidateInput(const void* flag);
-void PrintHelp();
+
+//----------------------------------------------------------------------------------------------
 
 const option_t COMMANDS[] = {
     // short_name  long_name         changeflag function         description                     has_arg

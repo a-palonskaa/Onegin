@@ -83,4 +83,3 @@ uint32_t ToLowerUTF8(uint32_t code) {
     }
     return code;
 }
-//FIXME - maybe by fread read all symbols and then work with char* buffer

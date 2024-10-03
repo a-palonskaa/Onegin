@@ -1,11 +1,16 @@
 #include <assert.h>
 #include "onegin_argparser.h"
 
+//----------------------------------------------------------------------------------------------
+
 const char* ONEGIN_SORTED = "output/onegin/sorted_onegin_full.txt";
 const char* ONEGIN_ORIGINAL = "txtfiles/onegin_full.txt";
 const char* ONEGIN_LOGGER_OUTPUT = "output/onegin/info";
 
 static void InitiallizeValidationFlags(void* flags);
+static void PrintHelp();
+
+//----------------------------------------------------------------------------------------------
 
 cmd_error_t ChangeFlagInputFile(void* flag, const char* arg) {
     assert(flag != nullptr);
@@ -39,6 +44,8 @@ cmd_error_t ChangeFlagOutputFile(void* flag, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
+//----------------------------------------------------------------------------------------------
+
 cmd_error_t ChangeFlagModeBubbleSort(void* flag, const char* arg) {
     assert(flag != nullptr);
     (void) arg;
@@ -61,34 +68,7 @@ cmd_error_t ChangeFlagModeQuickSort(void* flag, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
-cmd_error_t Help(void* flag, const char* arg) {
-    (void) arg;
-    (void) flag;
-
-    PrintHelp();
-    return INPUT_ERROR;
-}
-
-void PrintHelp() {
-    for (size_t i = 0; i < CMD_ARRAY_LENGTH; i++) {
-        printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
-                                       COMMANDS[i].long_name,
-                                       COMMANDS[i].description);
-    }
-}
-
-cmd_error_t ValidateInput(const void* flag) {
-    assert(flag != nullptr);
-    const flags_t* flags = (const flags_t*) flag;
-
-    if (flags->output_valid > 1 ||
-        flags->input_valid > 1  ||
-        flags->sort_mode_valid > 1) {
-        printf("MUTUAL DESTRUCTION ERROR\n");
-        return INPUT_ERROR;
-    }
-    return NO_CMD_ERRORS;
-}
+//----------------------------------------------------------------------------------------------
 
 cmd_error_t ChangeFlagBackwardSort(void* flag, const char* arg) {
     assert(flag != nullptr);
@@ -129,6 +109,38 @@ cmd_error_t ChangeFlagNoSort(void* flag, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
+//----------------------------------------------------------------------------------------------
+
+cmd_error_t Help(void* flag, const char* arg) {
+    (void) arg;
+    (void) flag;
+
+    PrintHelp();
+    return INPUT_ERROR;
+}
+
+static void PrintHelp() {
+    for (size_t i = 0; i < CMD_ARRAY_LENGTH; i++) {
+        printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
+                                       COMMANDS[i].long_name,
+                                       COMMANDS[i].description);
+    }
+}
+
+cmd_error_t ValidateInput(const void* flag) {
+    assert(flag != nullptr);
+    const flags_t* flags = (const flags_t*) flag;
+
+    if (flags->output_valid > 1 ||
+        flags->input_valid > 1  ||
+        flags->sort_mode_valid > 1) {
+        printf("MUTUAL DESTRUCTION ERROR\n");
+        return INPUT_ERROR;
+    }
+    return NO_CMD_ERRORS;
+}
+
+//----------------------------------------------------------------------------------------------
 
 void InitiallizeFlagsOnegin(void* flag) {
     assert(flag != nullptr);

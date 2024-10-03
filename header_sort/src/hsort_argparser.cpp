@@ -1,11 +1,16 @@
 #include <assert.h>
 #include "hsort_argparser.h"
 
+//----------------------------------------------------------------------------------------------
+
 const char* HEADER_SORT_LOGGER_OUTPUT = "output/header_sort/info";
 const char* HEADER_SORT_OUTPUT = "output/header_sort/sorted_headers.txt";
 const char* HEADER_SORT_INPUT = "onegin/src/main.cpp";
 
 static void InitiallizeValidationFlags(void* flag);
+static void PrintHelp();;
+
+//----------------------------------------------------------------------------------------------
 
 cmd_error_t ChangeFlagInputFile(void* flag, const char* arg) {
     assert(flag != nullptr);
@@ -39,6 +44,8 @@ cmd_error_t ChangeFlagOutputFile(void* flag, const char* arg) {
     return NO_CMD_ERRORS;
 }
 
+//----------------------------------------------------------------------------------------------
+
 cmd_error_t Help(void* flag, const char* arg) {
     (void) arg;
     (void) flag;
@@ -47,7 +54,7 @@ cmd_error_t Help(void* flag, const char* arg) {
     return INPUT_ERROR;
 }
 
-void PrintHelp() {
+static void PrintHelp() {
     for (size_t i = 0; i < COMMANDS_ARRAY_LENGTH; i++) {
         printf("%10s %10s %-10s" "\n", COMMANDS[i].name,
                                     COMMANDS[i].long_name,
@@ -66,6 +73,8 @@ cmd_error_t ValidateInput(const void* flag) {
     }
     return NO_CMD_ERRORS;
 }
+
+//----------------------------------------------------------------------------------------------
 
 void InitiallizeFlagsHeaderSort(void* flag) {
     assert(flag != nullptr);

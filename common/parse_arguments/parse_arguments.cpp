@@ -4,7 +4,8 @@
 #include "parse_arguments.h"
 
 cmd_error_t ArgParser(int argc, const char* argv[], void* flags,
-                      const option_t* commands, size_t commands_len, cmd_error_t (*ValidateInput)(const void*)) {
+                      const option_t* commands, size_t commands_len,
+                      cmd_error_t (*validate_input)(const void*)) {
     assert(argv  != nullptr);
     assert(flags != nullptr);
     assert(argc >= 0);
@@ -49,5 +50,5 @@ cmd_error_t ArgParser(int argc, const char* argv[], void* flags,
             return INPUT_ERROR;
         }
     }
-    return ValidateInput(flags);
+    return validate_input(flags);
 }

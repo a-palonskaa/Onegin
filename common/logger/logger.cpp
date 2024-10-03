@@ -11,6 +11,8 @@ static void AestheticizeString(const char *src, char *dst, size_t max_len);
 
 const size_t MAXLINE = 100;
 
+//----------------------------------------------------------------------------------------------
+
 static logger_t* GetLogger() {
     static logger_t logger = {};
     return &logger;
@@ -29,6 +31,8 @@ void LoggerSetFile(FILE* out) {
 void LoggerSetLevel(enum LogLevel level) {
     GetLogger()->min_level = level;
 }
+
+//----------------------------------------------------------------------------------------------
 
 void Log(const enum LogLevel status, const char *fmt, ...) {
     assert(fmt != nullptr);
@@ -54,6 +58,8 @@ void Log(const enum LogLevel status, const char *fmt, ...) {
 
     va_end (args);
 }
+
+//----------------------------------------------------------------------------------------------
 
 #define ADD_COLOR_(COLOR , str)           \
     do {                                  \

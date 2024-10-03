@@ -21,6 +21,10 @@ typedef struct {
     size_t sort_mode_cnt_default;
 } flags_t;
 
+//----------------------------------------------------------------------------------------------
+
+void InitiallizeFlagsOnegin(void* flag);
+
 cmd_error_t ChangeFlagInputFile(void* flag, const char* arg);
 cmd_error_t ChangeFlagOutputFile(void* flag, const char* arg);
 cmd_error_t ChangeFlagLoggerOutput(void* flag, const char* arg);
@@ -33,9 +37,10 @@ cmd_error_t ChangeFlagBackwardSort(void* flag, const char* arg);
 cmd_error_t ChangeFlagNoSort(void* flag, const char* arg);
 
 cmd_error_t Help(void* flag, const char* arg);
-void InitiallizeFlagsOnegin(void* flag);
+
 cmd_error_t ValidateInput(const void* flag);
-void PrintHelp();
+
+//----------------------------------------------------------------------------------------------
 
 const option_t COMMANDS[] = {
     // short_name     long_name       changeflag function         description                      has_arg

@@ -30,11 +30,11 @@ static errors_t CountOctetsUTF8(my_rune_t* rune) {
 }
 
 
-errors_t ReadOctetsUTF8(my_rune_t* rune, char* buffer) {
+errors_t ReadOctetsUTF8(my_rune_t* rune, unsigned char* buffer) {
     assert(rune != nullptr);
     assert(buffer != nullptr);
 
-    char c = *buffer;
+    unsigned char c = buffer[0];
     rune->bits = (uint32_t) c << 24;
 
     if (CountOctetsUTF8(rune) != NOERRORS) {
@@ -42,7 +42,7 @@ errors_t ReadOctetsUTF8(my_rune_t* rune, char* buffer) {
     }
 
     for (size_t i = 2; i <= rune->width; i++) {
-        c = *(buffer + i);
+        c = buffer[i - 1];
         rune->bits = rune->bits + ((uint32_t) c << (8 * (4 - i)));
     }
     return NOERRORS;
